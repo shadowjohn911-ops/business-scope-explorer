@@ -33,7 +33,7 @@ const Dashboard = () => {
         </div>
 
         {/* Module tabs */}
-        <ModuleTabs active={activeModule} onChange={setActiveModule} />
+        <ModuleTabs active={activeModule} onChange={setActiveModule} role={roleType} />
       </div>
 
       {/* Filters */}
