@@ -29,37 +29,39 @@ const RoleSelect = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <div className="pt-14 pb-8 px-6 text-center">
-        <h1 className="text-2xl font-bold text-foreground mb-2">选择角色</h1>
-        <p className="text-sm text-muted-foreground">请选择您的角色以进入对应的数据看板</p>
-      </div>
+    <div className="min-h-screen bg-background flex flex-col items-center">
+      <div className="w-full max-w-md min-h-screen flex flex-col">
+        {/* Header */}
+        <div className="pt-12 pb-6 px-5 text-center">
+          <h1 className="text-xl font-bold text-foreground mb-1">选择角色</h1>
+          <p className="text-xs text-muted-foreground">请选择您的角色以进入对应的数据看板</p>
+        </div>
 
-      {/* Role cards */}
-      <div className="flex-1 px-5 space-y-4">
-        {roles.map((role) => {
-          const Icon = role.icon;
-          return (
-            <button
-              key={role.id}
-              onClick={() => navigate(`/dashboard/${role.id}`)}
-              className="w-full flex items-center gap-4 p-5 bg-card rounded-2xl shadow-sm border border-border active:scale-[0.98] transition-transform"
-            >
-              <div className={`w-12 h-12 rounded-xl ${role.colorClass} flex items-center justify-center shrink-0`}>
-                <Icon className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <div className="text-left">
-                <div className="text-base font-semibold text-card-foreground">{role.label}</div>
-                <div className="text-sm text-muted-foreground mt-0.5">{role.desc}</div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+        {/* Role cards */}
+        <div className="flex-1 px-4 space-y-3">
+          {roles.map((role) => {
+            const Icon = role.icon;
+            return (
+              <button
+                key={role.id}
+                onClick={() => navigate(`/dashboard/${role.id}`)}
+                className="w-full flex items-center gap-3 p-4 bg-card rounded-xl shadow-sm border border-border active:scale-[0.98] transition-transform"
+              >
+                <div className={`w-10 h-10 rounded-lg ${role.colorClass} flex items-center justify-center shrink-0`}>
+                  <Icon className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <div className="text-left">
+                  <div className="text-sm font-semibold text-card-foreground">{role.label}</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">{role.desc}</div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
 
-      <div className="pb-10 pt-6 text-center">
-        <p className="text-xs text-muted-foreground">数据洞察平台 v1.0</p>
+        <div className="pb-8 pt-4 text-center">
+          <p className="text-[10px] text-muted-foreground">数据洞察平台 v1.0</p>
+        </div>
       </div>
     </div>
   );
