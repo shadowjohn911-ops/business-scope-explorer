@@ -15,6 +15,7 @@ const mockProviders = [
 
 interface Props {
   role: RoleType;
+  onLevel1Change?: (val: string) => void;
 }
 
 const MerchantOwnerFilter = ({ role }: Props) => {
