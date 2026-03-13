@@ -56,6 +56,7 @@ const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
     setLevel1(val);
     setLevel2Selected([]);
     setSearchTerm("");
+    onLevel1Change?.(val);
   };
 
   const getDisplayText = () => {
