@@ -30,9 +30,10 @@ const getConfig = (module: ModuleType): DimensionConfig => {
 interface Props {
   role: RoleType;
   module: ModuleType;
+  onOwnerLevel1Change?: (val: string) => void;
 }
 
-const DimensionFilters = ({ role, module }: Props) => {
+const DimensionFilters = ({ role, module, onOwnerLevel1Change }: Props) => {
   const config = getConfig(module);
 
   return (
@@ -44,7 +45,7 @@ const DimensionFilters = ({ role, module }: Props) => {
       )}
 
       {config.showMerchantOwner && (
-        <MerchantOwnerFilter role={role} />
+        <MerchantOwnerFilter role={role} onLevel1Change={onOwnerLevel1Change} />
       )}
 
       {config.showCardType && (
