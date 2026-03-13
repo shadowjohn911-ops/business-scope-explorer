@@ -33,19 +33,41 @@ const Dashboard = () => {
         </div>
 
         {/* Module tabs */}
-        <ModuleTabs active={activeModule} onChange={setActiveModule} />
+        <ModuleTabs active={activeModule} onChange={setActiveModule} role={roleType} />
       </div>
 
       {/* Filters */}
       <div className="flex-1 px-4 pt-4 pb-8">
         <DimensionFilters role={roleType} module={activeModule} />
 
-        {/* Placeholder content */}
-        <div className="mt-6 bg-card rounded-xl border border-border p-6 text-center">
-          <p className="text-muted-foreground text-sm">
-            {roleLabels[roleType]} · {activeModule === "merchant" ? "商户洞察" : activeModule === "transaction" ? "交易洞察" : "组织洞察"} 数据区域
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">选择维度筛选后查看数据</p>
+        {/* Data content area */}
+        <div className="mt-6 space-y-4">
+          <div className="bg-card rounded-xl border border-border p-6 text-center">
+            <p className="text-muted-foreground text-sm">
+              {roleLabels[roleType]} · {activeModule === "merchant" ? "商户洞察" : activeModule === "transaction" ? "交易洞察" : "组织洞察"} 数据区域
+            </p>
+            <p className="text-xs text-muted-foreground mt-2">选择维度筛选后查看数据</p>
+          </div>
+
+          {activeModule === "organization" && roleType === "branch" && (
+            <>
+              <div className="bg-card rounded-xl border border-border p-6 text-center">
+                <p className="text-muted-foreground text-sm font-medium">服务商洞察</p>
+                <p className="text-xs text-muted-foreground mt-2">服务商相关数据展示区域</p>
+              </div>
+              <div className="bg-card rounded-xl border border-border p-6 text-center">
+                <p className="text-muted-foreground text-sm font-medium">合作方洞察</p>
+                <p className="text-xs text-muted-foreground mt-2">合作方相关数据展示区域</p>
+              </div>
+            </>
+          )}
+
+          {activeModule === "organization" && roleType === "provider" && (
+            <div className="bg-card rounded-xl border border-border p-6 text-center">
+              <p className="text-muted-foreground text-sm font-medium">合作方洞察</p>
+              <p className="text-xs text-muted-foreground mt-2">合作方相关数据展示区域</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
