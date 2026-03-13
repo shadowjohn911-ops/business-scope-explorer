@@ -47,6 +47,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        role: {
+          branch: "hsl(var(--role-branch))",
+          provider: "hsl(var(--role-provider))",
+          partner: "hsl(var(--role-partner))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
