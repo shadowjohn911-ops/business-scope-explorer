@@ -6,7 +6,7 @@ type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
 
 const businessModes = ["渠道", "四方", "saas", "资源", "地推"];
-const cardTypes = ["借记卡", "贷记卡", "预付卡"];
+const cardTypes = ["借记卡", "贷记卡", "扫码", "外卡"];
 const products = ["收款码", "POS", "扫码盒", "智能POS"];
 
 interface DimensionConfig {
