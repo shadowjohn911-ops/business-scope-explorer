@@ -18,7 +18,7 @@ interface Props {
   onLevel1Change?: (val: string) => void;
 }
 
-const MerchantOwnerFilter = ({ role }: Props) => {
+const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
   const [open, setOpen] = useState(false);
   const [level1, setLevel1] = useState<string>("全部");
   const [level2Selected, setLevel2Selected] = useState<string[]>([]);
