@@ -66,29 +66,29 @@ const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
   };
 
   return (
-    <div className="bg-card rounded-xl border border-border overflow-hidden">
+    <div className="bg-card rounded-lg border border-border overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3"
+        className="w-full flex items-center justify-between px-3 py-2.5"
       >
-        <span className="text-sm font-medium text-card-foreground">商户归属</span>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground truncate max-w-[160px]">{getDisplayText()}</span>
-          <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+        <span className="text-xs font-medium text-card-foreground">商户归属</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-muted-foreground truncate max-w-[120px]">{getDisplayText()}</span>
+          <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
         </div>
       </button>
 
       {open && (
-        <div className="px-4 pb-3 space-y-3">
+        <div className="px-3 pb-2.5 space-y-2.5">
           {/* Level 1 */}
           <div>
-            <p className="text-xs text-muted-foreground mb-2">一级筛选</p>
-            <div className="flex flex-wrap gap-2">
+            <p className="text-[10px] text-muted-foreground mb-1.5">一级筛选</p>
+            <div className="flex flex-wrap gap-1.5">
               {getLevel1Options().map((opt) => (
                 <button
                   key={opt}
                   onClick={() => handleLevel1Change(opt)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors ${
                     level1 === opt ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -101,11 +101,11 @@ const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
           {/* Level 2 - fixed options */}
           {level2Options && (
             <div>
-              <p className="text-xs text-muted-foreground mb-2">二级筛选</p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-[10px] text-muted-foreground mb-1.5">二级筛选</p>
+              <div className="flex flex-wrap gap-1.5">
                 <button
                   onClick={() => setLevel2Selected([])}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors ${
                     level2Selected.length === 0 ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -117,12 +117,12 @@ const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
                     <button
                       key={opt}
                       onClick={() => toggleLevel2(opt)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                      className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors ${
                         active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {opt}
-                      {active && <X className="w-3 h-3 inline ml-1" />}
+                      {active && <X className="w-3 h-3 inline ml-0.5" />}
                     </button>
                   );
                 })}
@@ -133,26 +133,26 @@ const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
           {/* Level 2 - searchable provider list */}
           {isTeamOrAlly && (
             <div>
-              <p className="text-xs text-muted-foreground mb-2">二级筛选 · 选择服务商</p>
-              <div className="relative mb-2">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <p className="text-[10px] text-muted-foreground mb-1.5">二级筛选 · 选择服务商</p>
+              <div className="relative mb-1.5">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder="搜索服务商编号或名称"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 text-sm bg-muted rounded-lg border-none outline-none text-foreground placeholder:text-muted-foreground"
+                  className="w-full pl-8 pr-2.5 py-1.5 text-xs bg-muted rounded-md border-none outline-none text-foreground placeholder:text-muted-foreground"
                 />
               </div>
-              <div className="max-h-40 overflow-y-auto space-y-1">
+              <div className="max-h-32 overflow-y-auto space-y-0.5">
                 <button
                   onClick={() => setLevel2Selected([])}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors ${
+                  className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors ${
                     level2Selected.length === 0 ? "bg-accent text-accent-foreground" : "text-muted-foreground"
                   }`}
                 >
                   <span>全部</span>
-                  {level2Selected.length === 0 && <Check className="w-3.5 h-3.5" />}
+                  {level2Selected.length === 0 && <Check className="w-3 h-3" />}
                 </button>
                 {filteredProviders.map((provider) => {
                   const active = level2Selected.includes(provider);
@@ -160,17 +160,17 @@ const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
                     <button
                       key={provider}
                       onClick={() => toggleLevel2(provider)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs transition-colors ${
+                      className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors ${
                         active ? "bg-accent text-accent-foreground" : "text-muted-foreground hover:bg-muted"
                       }`}
                     >
                       <span>{provider}</span>
-                      {active && <Check className="w-3.5 h-3.5" />}
+                      {active && <Check className="w-3 h-3" />}
                     </button>
                   );
                 })}
                 {filteredProviders.length === 0 && (
-                  <p className="text-xs text-muted-foreground text-center py-3">未找到匹配的服务商</p>
+                  <p className="text-xs text-muted-foreground text-center py-2">未找到匹配的服务商</p>
                 )}
               </div>
             </div>

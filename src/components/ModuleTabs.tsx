@@ -19,12 +19,12 @@ const ModuleTabs = ({ active, onChange, role }: Props) => {
     : allModules;
 
   return (
-    <div className="flex px-4 gap-1 pb-2">
+    <div className="flex px-3 gap-1 pb-2">
       {modules.map((m) => (
         <button
           key={m.id}
           onClick={() => onChange(m.id)}
-          className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${
+          className={`flex-1 py-1.5 text-xs font-medium rounded-md transition-colors ${
             active === m.id
               ? "bg-primary text-primary-foreground"
               : "text-muted-foreground hover:bg-muted"
