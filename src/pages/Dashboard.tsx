@@ -27,66 +27,68 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Top bar */}
-      <div className="sticky top-0 z-10 bg-card border-b border-border">
-        <div className="flex items-center h-12 px-4">
-          <button onClick={() => navigate("/")} className="p-1 -ml-1">
-            <ArrowLeft className="w-5 h-5 text-foreground" />
-          </button>
-          <h1 className="flex-1 text-center font-semibold text-foreground pr-6">
-            {roleLabels[roleType]}数据看板
-          </h1>
+    <div className="min-h-screen bg-background flex flex-col items-center">
+      <div className="w-full max-w-md min-h-screen flex flex-col">
+        {/* Top bar */}
+        <div className="sticky top-0 z-10 bg-card border-b border-border">
+          <div className="flex items-center h-11 px-3">
+            <button onClick={() => navigate("/")} className="p-1 -ml-1">
+              <ArrowLeft className="w-5 h-5 text-foreground" />
+            </button>
+            <h1 className="flex-1 text-center font-semibold text-sm text-foreground pr-6">
+              {roleLabels[roleType]}数据看板
+            </h1>
+          </div>
+
+          {/* Module tabs */}
+          <ModuleTabs active={activeModule} onChange={handleModuleChange} role={roleType} />
         </div>
 
-        {/* Module tabs */}
-        <ModuleTabs active={activeModule} onChange={handleModuleChange} role={roleType} />
-      </div>
+        {/* Filters */}
+        <div className="flex-1 px-3 pt-3 pb-6">
+          <DimensionFilters role={roleType} module={activeModule} onOwnerLevel1Change={setOwnerLevel1} />
 
-      {/* Filters */}
-      <div className="flex-1 px-4 pt-4 pb-8">
-        <DimensionFilters role={roleType} module={activeModule} onOwnerLevel1Change={setOwnerLevel1} />
-
-        {/* Data content area */}
-        <div className="mt-6 space-y-4">
-          {activeModule !== "organization" && (
-            <div className="bg-card rounded-xl border border-border p-6 text-center">
-              <p className="text-muted-foreground text-sm">
-                {roleLabels[roleType]} · {activeModule === "merchant" ? "商户洞察" : "交易洞察"} 数据区域
-              </p>
-              <p className="text-xs text-muted-foreground mt-2">选择维度筛选后查看数据</p>
-            </div>
-          )}
-
-          {activeModule === "organization" && roleType === "branch" && (
-            <>
-              {ownerLevel1 !== "自有" && (
-                <div className="bg-card rounded-xl border border-border p-6 text-center">
-                  <p className="text-muted-foreground text-sm font-medium">服务商洞察</p>
-                  <p className="text-xs text-muted-foreground mt-2">服务商相关数据展示区域</p>
-                </div>
-              )}
-              <div className="bg-card rounded-xl border border-border p-6 text-center">
-                <p className="text-muted-foreground text-sm font-medium">合作方洞察</p>
-                <p className="text-xs text-muted-foreground mt-2">合作方相关数据展示区域</p>
+          {/* Data content area */}
+          <div className="mt-4 space-y-3">
+            {activeModule !== "organization" && (
+              <div className="bg-card rounded-lg border border-border p-5 text-center">
+                <p className="text-muted-foreground text-xs">
+                  {roleLabels[roleType]} · {activeModule === "merchant" ? "商户洞察" : "交易洞察"} 数据区域
+                </p>
+                <p className="text-[10px] text-muted-foreground mt-1.5">选择维度筛选后查看数据</p>
               </div>
-            </>
-          )}
+            )}
 
-          {activeModule === "organization" && roleType === "provider" && (
-            <>
-              {ownerLevel1 !== "自有" && (
-                <div className="bg-card rounded-xl border border-border p-6 text-center">
-                  <p className="text-muted-foreground text-sm font-medium">盟友洞察</p>
-                  <p className="text-xs text-muted-foreground mt-2">盟友相关数据展示区域</p>
+            {activeModule === "organization" && roleType === "branch" && (
+              <>
+                {ownerLevel1 !== "自有" && (
+                  <div className="bg-card rounded-lg border border-border p-5 text-center">
+                    <p className="text-muted-foreground text-xs font-medium">服务商洞察</p>
+                    <p className="text-[10px] text-muted-foreground mt-1.5">服务商相关数据展示区域</p>
+                  </div>
+                )}
+                <div className="bg-card rounded-lg border border-border p-5 text-center">
+                  <p className="text-muted-foreground text-xs font-medium">合作方洞察</p>
+                  <p className="text-[10px] text-muted-foreground mt-1.5">合作方相关数据展示区域</p>
                 </div>
-              )}
-              <div className="bg-card rounded-xl border border-border p-6 text-center">
-                <p className="text-muted-foreground text-sm font-medium">合作方洞察</p>
-                <p className="text-xs text-muted-foreground mt-2">合作方相关数据展示区域</p>
-              </div>
-            </>
-          )}
+              </>
+            )}
+
+            {activeModule === "organization" && roleType === "provider" && (
+              <>
+                {ownerLevel1 !== "自有" && (
+                  <div className="bg-card rounded-lg border border-border p-5 text-center">
+                    <p className="text-muted-foreground text-xs font-medium">盟友洞察</p>
+                    <p className="text-[10px] text-muted-foreground mt-1.5">盟友相关数据展示区域</p>
+                  </div>
+                )}
+                <div className="bg-card rounded-lg border border-border p-5 text-center">
+                  <p className="text-muted-foreground text-xs font-medium">合作方洞察</p>
+                  <p className="text-[10px] text-muted-foreground mt-1.5">合作方相关数据展示区域</p>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

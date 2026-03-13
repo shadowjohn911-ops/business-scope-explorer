@@ -23,23 +23,23 @@ const MultiSelectFilter = ({ label, options }: Props) => {
   const displayText = isAll ? "全部" : selected.join("、");
 
   return (
-    <div className="bg-card rounded-xl border border-border overflow-hidden">
+    <div className="bg-card rounded-lg border border-border overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-4 py-3"
+        className="w-full flex items-center justify-between px-3 py-2.5"
       >
-        <span className="text-sm font-medium text-card-foreground">{label}</span>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground truncate max-w-[160px]">{displayText}</span>
-          <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
+        <span className="text-xs font-medium text-card-foreground">{label}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs text-muted-foreground truncate max-w-[120px]">{displayText}</span>
+          <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
         </div>
       </button>
 
       {open && (
-        <div className="px-4 pb-3 flex flex-wrap gap-2">
+        <div className="px-3 pb-2.5 flex flex-wrap gap-1.5">
           <button
             onClick={selectAll}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+            className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors ${
               isAll ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
             }`}
           >
@@ -51,12 +51,12 @@ const MultiSelectFilter = ({ label, options }: Props) => {
               <button
                 key={opt}
                 onClick={() => toggle(opt)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-colors ${
                   active ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
                 }`}
               >
                 {opt}
-                {active && <X className="w-3 h-3 inline ml-1" />}
+                {active && <X className="w-3 h-3 inline ml-0.5" />}
               </button>
             );
           })}
