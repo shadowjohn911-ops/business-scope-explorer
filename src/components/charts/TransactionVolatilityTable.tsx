@@ -16,6 +16,18 @@ const bands = [
   "⬇100%",
 ] as const;
 
+// Band ranges for generating matching detail data
+const bandRanges: Record<string, [number, number]> = {
+  "⬆500%以上": [500, 1000],
+  "⬆200%~500%": [200, 500],
+  "⬆100%~200%": [100, 200],
+  "⬆50%~100%": [50, 100],
+  "-50%~50%": [-50, 50],
+  "⬇50%~75%": [-75, -50],
+  "⬇75%~100%": [-100, -75],
+  "⬇100%": [-100, -100],
+};
+
 const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
 const totalPerPeriod: Record<string, number> = {};
 
@@ -41,12 +53,12 @@ const getBarColor = (band: string) => {
   return "hsl(215, 90%, 50%)";
 };
 
-// Mock detail data for drill-down
-const generateDetails = () =>
-  Array.from({ length: 5 }, (_, i) => {
+const generateDetails = (band: string) => {
+  const [minPct, maxPct] = bandRanges[band] || [-50, 50];
+  return Array.from({ length: 5 }, (_, i) => {
     const previousAmount = Math.floor(Math.random() * 50000) + 1000;
-    const currentAmount = Math.floor(Math.random() * 50000) + 1000;
-    const volatility = previousAmount > 0 ? Math.round(((currentAmount - previousAmount) / previousAmount) * 100) : 0;
+    const volatility = Math.round(minPct + Math.random() * (maxPct - minPct));
+    const currentAmount = Math.max(0, Math.round(previousAmount * (1 + volatility / 100)));
     return {
       merchantId: `M${String(2000 + i).padStart(6, "0")}`,
       merchantName: `商户${["A", "B", "C", "D", "E"][i]}`,
@@ -57,6 +69,7 @@ const generateDetails = () =>
       volatility,
     };
   });
+};
 
 type DetailSortField = "currentAmount" | "volatility";
 
@@ -65,7 +78,7 @@ const TransactionVolatilityTable = () => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailTitle, setDetailTitle] = useState("");
   const [detailPeriod, setDetailPeriod] = useState("7天");
-  const [details] = useState(() => generateDetails());
+  const [details, setDetails] = useState<ReturnType<typeof generateDetails>>([]);
   const [sortField, setSortField] = useState<DetailSortField>("currentAmount");
   const [sortAsc, setSortAsc] = useState(false);
 
@@ -73,6 +86,7 @@ const TransactionVolatilityTable = () => {
     if (value < 100) {
       setDetailTitle(`${band} · ${period} 明细`);
       setDetailPeriod(period);
+      setDetails(generateDetails(band));
       setDetailOpen(true);
     }
   };
@@ -167,7 +181,6 @@ const TransactionVolatilityTable = () => {
         </CardContent>
       </Card>
 
-      {/* Detail Dialog */}
       <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
         <DialogContent className="max-w-sm max-h-[80vh] overflow-auto p-4">
           <DialogHeader className="pb-2">

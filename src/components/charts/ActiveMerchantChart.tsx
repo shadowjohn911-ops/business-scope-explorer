@@ -50,7 +50,6 @@ const rawIndustryData = [
 ];
 
 const total = rawIndustryData.reduce((s, d) => s + d.value, 0);
-// Sort descending, take top items until cumulative >= 90%
 const sorted = [...rawIndustryData].sort((a, b) => b.value - a.value);
 let cumulative = 0;
 const threshold = total * 0.9;
@@ -72,20 +71,50 @@ const industryData = [
 
 const RADIAN = Math.PI / 180;
 
-const renderInnerLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name }: any) => {
+// Inner label: show percentage only
+const renderInnerLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
   return (
-    <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={8} fill="white" fontWeight={500}>
-      {name}
+    <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={7} fill="white" fontWeight={600}>
+      {(percent * 100).toFixed(1)}%
     </text>
+  );
+};
+
+// Outer label with leader line: industry name + count
+const renderOuterLabel = ({ cx, cy, midAngle, outerRadius, name, value }: any) => {
+  const sin = Math.sin(-midAngle * RADIAN);
+  const cos = Math.cos(-midAngle * RADIAN);
+  const ex = cx + (outerRadius + 12) * cos;
+  const ey = cy + (outerRadius + 12) * sin;
+  const ex2 = cx + (outerRadius + 28) * cos;
+  const ey2 = cy + (outerRadius + 28) * sin;
+  const textAnchor = cos >= 0 ? "start" : "end";
+  const ex3 = ex2 + (cos >= 0 ? 4 : -4);
+
+  return (
+    <g>
+      <path
+        d={`M${cx + outerRadius * cos},${cy + outerRadius * sin}L${ex},${ey}L${ex2},${ey2}`}
+        stroke="hsl(215, 12%, 65%)"
+        fill="none"
+        strokeWidth={0.8}
+      />
+      <circle cx={cx + outerRadius * cos} cy={cy + outerRadius * sin} r={1.5} fill="hsl(215, 12%, 65%)" />
+      <text x={ex3} y={ey2 - 4} textAnchor={textAnchor} fontSize={7} fill="hsl(215, 12%, 35%)" fontWeight={500}>
+        {name}
+      </text>
+      <text x={ex3} y={ey2 + 5} textAnchor={textAnchor} fontSize={7} fill="hsl(215, 12%, 55%)">
+        {value}户
+      </text>
+    </g>
   );
 };
 
 const ActiveMerchantChart = () => {
   const [dimension, setDimension] = useState<Dimension>("survival");
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
     <Card className="border-border">
@@ -153,31 +182,42 @@ const ActiveMerchantChart = () => {
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="h-56 relative">
+          <div className="h-64 relative">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={industryData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={40}
-                  outerRadius={70}
+                  innerRadius={38}
+                  outerRadius={62}
                   dataKey="value"
                   stroke="none"
-                  label={renderInnerLabel}
+                  label={renderOuterLabel}
                   labelLine={false}
-                  onMouseEnter={(_, index) => setActiveIndex(index)}
-                  onMouseLeave={() => setActiveIndex(null)}
                 >
                   {industryData.map((entry, index) => (
                     <Cell
                       key={index}
                       fill={entry.name === "其它" ? OTHER_COLOR : COLORS[index % COLORS.length]}
-                      opacity={activeIndex === null || activeIndex === index ? 1 : 0.5}
-                      style={{ cursor: "pointer", transition: "opacity 0.2s" }}
+                      style={{ cursor: "pointer" }}
                     />
                   ))}
                 </Pie>
+                {/* Inner percentage labels rendered as a second Pie layer */}
+                <Pie
+                  data={industryData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={38}
+                  outerRadius={62}
+                  dataKey="value"
+                  stroke="none"
+                  label={renderInnerLabel}
+                  labelLine={false}
+                  isAnimationActive={false}
+                  fill="transparent"
+                />
                 <Tooltip
                   contentStyle={{
                     fontSize: 11,
