@@ -33,11 +33,10 @@ const COLORS = [
   "hsl(260, 60%, 55%)",
   "hsl(180, 50%, 45%)",
   "hsl(45, 80%, 50%)",
-  "hsl(200, 70%, 50%)",
 ];
+const OTHER_COLOR = "hsl(0, 0%, 20%)";
 
-const total = 10000;
-const industryData = [
+const rawIndustryData = [
   { name: "餐饮", value: 2850 },
   { name: "零售", value: 2130 },
   { name: "生活服务", value: 1560 },
@@ -45,39 +44,48 @@ const industryData = [
   { name: "医疗健康", value: 750 },
   { name: "美容美发", value: 620 },
   { name: "住宿", value: 510 },
-  { name: "其它", value: 600 },
-].map((d) => ({ ...d, percent: ((d.value / total) * 100).toFixed(1) + "%" }));
+  { name: "汽车服务", value: 300 },
+  { name: "文体娱乐", value: 200 },
+  { name: "家政服务", value: 100 },
+];
+
+const total = rawIndustryData.reduce((s, d) => s + d.value, 0);
+// Sort descending, take top items until cumulative >= 90%
+const sorted = [...rawIndustryData].sort((a, b) => b.value - a.value);
+let cumulative = 0;
+const threshold = total * 0.9;
+const topItems: typeof sorted = [];
+const otherItems: typeof sorted = [];
+sorted.forEach((item) => {
+  if (cumulative < threshold) {
+    topItems.push(item);
+    cumulative += item.value;
+  } else {
+    otherItems.push(item);
+  }
+});
+const otherValue = otherItems.reduce((s, d) => s + d.value, 0);
+const industryData = [
+  ...topItems.map((d) => ({ ...d, percent: ((d.value / total) * 100).toFixed(1) + "%" })),
+  ...(otherValue > 0 ? [{ name: "其它", value: otherValue, percent: ((otherValue / total) * 100).toFixed(1) + "%" }] : []),
+];
 
 const RADIAN = Math.PI / 180;
 
-const renderCustomLabel = ({
-  cx, cy, midAngle, outerRadius, name, value, percent,
-}: any) => {
-  const radius = outerRadius + 18;
+const renderInnerLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, name }: any) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
-  const ex = cx + (outerRadius + 8) * Math.cos(-midAngle * RADIAN);
-  const ey = cy + (outerRadius + 8) * Math.sin(-midAngle * RADIAN);
-
   return (
-    <g>
-      <line x1={ex} y1={ey} x2={x} y2={y} stroke="hsl(215, 12%, 70%)" strokeWidth={0.5} />
-      <text
-        x={x}
-        y={y}
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-        fontSize={8}
-        fill="hsl(215, 12%, 40%)"
-      >
-        {name} {value}户 {percent}
-      </text>
-    </g>
+    <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={8} fill="white" fontWeight={500}>
+      {name}
+    </text>
   );
 };
 
 const ActiveMerchantChart = () => {
   const [dimension, setDimension] = useState<Dimension>("survival");
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   return (
     <Card className="border-border">
@@ -145,22 +153,29 @@ const ActiveMerchantChart = () => {
             </ResponsiveContainer>
           </div>
         ) : (
-          <div className="h-56">
+          <div className="h-56 relative">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={industryData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={35}
-                  outerRadius={55}
+                  innerRadius={40}
+                  outerRadius={70}
                   dataKey="value"
                   stroke="none"
-                  label={renderCustomLabel}
+                  label={renderInnerLabel}
                   labelLine={false}
+                  onMouseEnter={(_, index) => setActiveIndex(index)}
+                  onMouseLeave={() => setActiveIndex(null)}
                 >
-                  {industryData.map((_, index) => (
-                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  {industryData.map((entry, index) => (
+                    <Cell
+                      key={index}
+                      fill={entry.name === "其它" ? OTHER_COLOR : COLORS[index % COLORS.length]}
+                      opacity={activeIndex === null || activeIndex === index ? 1 : 0.5}
+                      style={{ cursor: "pointer", transition: "opacity 0.2s" }}
+                    />
                   ))}
                 </Pie>
                 <Tooltip
@@ -169,7 +184,10 @@ const ActiveMerchantChart = () => {
                     borderRadius: 8,
                     border: "1px solid hsl(214, 20%, 90%)",
                   }}
-                  formatter={(value: number, name: string) => [`${value}户`, name]}
+                  formatter={(value: number, name: string) => {
+                    const pct = ((value / total) * 100).toFixed(1);
+                    return [`${value}户 (${pct}%)`, name];
+                  }}
                 />
               </PieChart>
             </ResponsiveContainer>

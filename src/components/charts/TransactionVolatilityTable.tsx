@@ -16,11 +16,9 @@ const bands = [
   "⬇100%",
 ] as const;
 
-// Generate mock data with value and rate
 const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
 const totalPerPeriod: Record<string, number> = {};
 
-// First pass: generate values
 bands.forEach((band) => {
   mockData[band] = {};
   periods.forEach((p) => {
@@ -44,16 +42,21 @@ const getBarColor = (band: string) => {
 };
 
 // Mock detail data for drill-down
-const generateDetails = (period: string) =>
-  Array.from({ length: 5 }, (_, i) => ({
-    merchantId: `M${String(2000 + i).padStart(6, "0")}`,
-    merchantName: `商户${["A", "B", "C", "D", "E"][i]}`,
-    firstSwipeDate: `2026-02-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
-    lastSwipeDate: `2026-03-${String(Math.floor(Math.random() * 16) + 1).padStart(2, "0")}`,
-    currentAmount: Math.floor(Math.random() * 50000) + 1000,
-    previousAmount: Math.floor(Math.random() * 50000) + 1000,
-    volatility: Math.floor(Math.random() * 1000) - 100,
-  }));
+const generateDetails = () =>
+  Array.from({ length: 5 }, (_, i) => {
+    const previousAmount = Math.floor(Math.random() * 50000) + 1000;
+    const currentAmount = Math.floor(Math.random() * 50000) + 1000;
+    const volatility = previousAmount > 0 ? Math.round(((currentAmount - previousAmount) / previousAmount) * 100) : 0;
+    return {
+      merchantId: `M${String(2000 + i).padStart(6, "0")}`,
+      merchantName: `商户${["A", "B", "C", "D", "E"][i]}`,
+      firstSwipeDate: `2026-02-${String(Math.floor(Math.random() * 28) + 1).padStart(2, "0")}`,
+      lastSwipeDate: `2026-03-${String(Math.floor(Math.random() * 16) + 1).padStart(2, "0")}`,
+      previousAmount,
+      currentAmount,
+      volatility,
+    };
+  });
 
 type DetailSortField = "currentAmount" | "volatility";
 
@@ -62,7 +65,7 @@ const TransactionVolatilityTable = () => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailTitle, setDetailTitle] = useState("");
   const [detailPeriod, setDetailPeriod] = useState("7天");
-  const [details] = useState(() => generateDetails("7天"));
+  const [details] = useState(() => generateDetails());
   const [sortField, setSortField] = useState<DetailSortField>("currentAmount");
   const [sortAsc, setSortAsc] = useState(false);
 
@@ -118,8 +121,6 @@ const TransactionVolatilityTable = () => {
                   <span className="text-muted-foreground">
                     示例：若"⬆500%以上"对应"7天"的数值为3，比例为+200%，则表示当前周期（如3/10-3/16）内有3个商户的交易额较上一周期（如3/3-3/9）增长超过5倍，且这类商户的数量较上一周期增加了2倍（即从1个增至3个）。
                   </span>
-                  <br /><br />
-                  数值小于100的单元格，可点击查看明细。明细字段为：商户号、商户名称、首刷日期、末刷日期、X天交易额（本期）、X天交易额（上期）、波动比例。排序字段：X天交易额（本期）、波动比例。
                 </PopoverContent>
               </Popover>
             </div>
@@ -129,8 +130,6 @@ const TransactionVolatilityTable = () => {
           <div className="space-y-0">
             {bands.map((band) => {
               const { value: count, rate } = mockData[band][activePeriod];
-              const total = totalPerPeriod[activePeriod];
-              const proportion = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
               const maxCount = Math.max(...bands.map((b) => mockData[b][activePeriod].value));
               const barWidth = maxCount > 0 ? (count / maxCount) * 100 : 0;
               const clickable = count < 100;
@@ -152,11 +151,10 @@ const TransactionVolatilityTable = () => {
                         style={{ width: `${barWidth}%`, backgroundColor: getBarColor(band) }}
                       />
                     </div>
-                    <div className="flex items-baseline gap-1 w-20 justify-end shrink-0">
+                    <div className="flex items-baseline gap-1 w-16 justify-end shrink-0">
                       <span className={`text-[10px] font-semibold ${clickable ? "text-primary underline underline-offset-2" : "text-foreground"}`}>
                         {count}
                       </span>
-                      <span className="text-[9px] text-muted-foreground">({proportion}%)</span>
                       <span className={`text-[9px] ${isPositive ? "text-emerald-600" : "text-red-500"}`}>
                         {isPositive ? "+" : ""}{rate}%
                       </span>
@@ -184,13 +182,13 @@ const TransactionVolatilityTable = () => {
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">商户名称</th>
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">首刷日期</th>
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">末刷日期</th>
+                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天交易额(上期)</th>
                   <th
                     className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground"
                     onClick={() => handleSort("currentAmount")}
                   >
                     <span className="inline-flex items-center gap-0.5">{periodDays}天交易额(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
                   </th>
-                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天交易额(上期)</th>
                   <th
                     className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground"
                     onClick={() => handleSort("volatility")}
@@ -206,8 +204,8 @@ const TransactionVolatilityTable = () => {
                     <td className="py-1.5 px-1 text-foreground">{d.merchantName}</td>
                     <td className="py-1.5 px-1 text-muted-foreground">{d.firstSwipeDate}</td>
                     <td className="py-1.5 px-1 text-muted-foreground">{d.lastSwipeDate}</td>
-                    <td className="py-1.5 px-1 text-right text-foreground font-medium">{d.currentAmount.toLocaleString()}</td>
                     <td className="py-1.5 px-1 text-right text-muted-foreground">{d.previousAmount.toLocaleString()}</td>
+                    <td className="py-1.5 px-1 text-right text-foreground font-medium">{d.currentAmount.toLocaleString()}</td>
                     <td className={`py-1.5 px-1 text-right font-medium ${d.volatility > 0 ? "text-emerald-600" : "text-red-500"}`}>
                       {d.volatility > 0 ? "+" : ""}{d.volatility}%
                     </td>
