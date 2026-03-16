@@ -3,6 +3,9 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import ModuleTabs from "@/components/ModuleTabs";
 import DimensionFilters from "@/components/DimensionFilters";
+import MerchantBehaviorTable from "@/components/charts/MerchantBehaviorTable";
+import ActiveMerchantChart from "@/components/charts/ActiveMerchantChart";
+import TransactionVolatilityTable from "@/components/charts/TransactionVolatilityTable";
 
 type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
