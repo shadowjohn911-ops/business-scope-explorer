@@ -3,6 +3,9 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import ModuleTabs from "@/components/ModuleTabs";
 import DimensionFilters from "@/components/DimensionFilters";
+import MerchantBehaviorTable from "@/components/charts/MerchantBehaviorTable";
+import ActiveMerchantChart from "@/components/charts/ActiveMerchantChart";
+import TransactionVolatilityTable from "@/components/charts/TransactionVolatilityTable";
 
 type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
@@ -50,10 +53,18 @@ const Dashboard = () => {
 
           {/* Data content area */}
           <div className="mt-4 space-y-3">
-            {activeModule !== "organization" && (
+            {activeModule === "merchant" && (
+              <>
+                <MerchantBehaviorTable />
+                <ActiveMerchantChart />
+                <TransactionVolatilityTable />
+              </>
+            )}
+
+            {activeModule === "transaction" && (
               <div className="bg-card rounded-lg border border-border p-5 text-center">
                 <p className="text-muted-foreground text-xs">
-                  {roleLabels[roleType]} · {activeModule === "merchant" ? "商户洞察" : "交易洞察"} 数据区域
+                  {roleLabels[roleType]} · 交易洞察 数据区域
                 </p>
                 <p className="text-[10px] text-muted-foreground mt-1.5">选择维度筛选后查看数据</p>
               </div>
