@@ -45,7 +45,11 @@ const transactionScaleData = [
 
 const RADIAN = Math.PI / 180;
 
-const ProviderDistributionChart = () => {
+interface Props {
+  entityLabel?: string;
+}
+
+const ProviderDistributionChart = ({ entityLabel = "服务商" }: Props) => {
   const [dimension, setDimension] = useState<Dimension>("merchantScale");
 
   const { data, total } = useMemo(() => {
@@ -99,7 +103,7 @@ const ProviderDistributionChart = () => {
     <Card className="border-border">
       <CardHeader className="px-3 py-2.5 pb-1">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xs font-semibold text-foreground">30天交易服务商分布</CardTitle>
+          <CardTitle className="text-xs font-semibold text-foreground">30天交易{entityLabel}分布</CardTitle>
           <div className="flex items-center gap-1.5">
             <div className="flex bg-muted rounded-md p-0.5">
               <button
@@ -126,10 +130,10 @@ const ProviderDistributionChart = () => {
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-80 text-[11px] leading-relaxed text-foreground" side="left" align="start">
-                图中每个扇区代表一个区间，数值表示该区间内的服务商数量，百分比表示该区间服务商占所有近30天有活跃商户的服务商总数的比例。
+                图中每个扇区代表一个区间，数值表示该区间内的{entityLabel}数量，百分比表示该区间{entityLabel}占所有近30天有活跃商户的{entityLabel}总数的比例。
                 <br /><br />
                 <span className="text-muted-foreground">
-                  示例：区间"6-20户"的数值为400，占比10%，意味着有400个服务商近30天内的活跃商户数量在6至20户之间，占所有近30天有活跃商户的服务商总数的10%。
+                  示例：区间"6-20户"的数值为400，占比10%，意味着有400个{entityLabel}近30天内的活跃商户数量在6至20户之间，占所有近30天有活跃商户的{entityLabel}总数的10%。
                 </span>
               </PopoverContent>
             </Popover>

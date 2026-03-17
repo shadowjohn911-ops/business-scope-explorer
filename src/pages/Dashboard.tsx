@@ -42,6 +42,9 @@ const Dashboard = () => {
     setSelectedProducts([]);
   };
 
+  // For provider role, when ownerLevel1 is "全部" or "盟友", disable partner detail clicks
+  const disablePartnerDetails = roleType === "provider" && (ownerLevel1 === "全部" || ownerLevel1 === "盟友");
+
   return (
     <div className="min-h-screen bg-background flex flex-col items-center">
       <div className="w-full max-w-md min-h-screen flex flex-col">
@@ -105,14 +108,15 @@ const Dashboard = () => {
             {activeModule === "organization" && roleType === "provider" && (
               <>
                 {ownerLevel1 !== "自有" && (
-                  <div className="bg-card rounded-lg border border-border p-5 text-center">
-                    <p className="text-muted-foreground text-xs font-medium">盟友洞察</p>
-                    <p className="text-[10px] text-muted-foreground mt-1.5">盟友相关数据展示区域</p>
-                  </div>
+                  <>
+                    <ProviderIntakeVolatilityTable entityLabel="盟友" />
+                    <ProviderTransactionVolatilityTable entityLabel="盟友" />
+                    <ProviderDistributionChart entityLabel="盟友" />
+                  </>
                 )}
-                <PartnerBehaviorTable />
-                <PartnerIntakeVolatilityTable />
-                <PartnerTransactionVolatilityTable />
+                <PartnerBehaviorTable disableDetails={disablePartnerDetails} />
+                <PartnerIntakeVolatilityTable disableDetails={disablePartnerDetails} />
+                <PartnerTransactionVolatilityTable disableDetails={disablePartnerDetails} />
                 <PartnerDistributionChart />
               </>
             )}
