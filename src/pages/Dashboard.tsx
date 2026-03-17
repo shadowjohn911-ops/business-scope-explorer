@@ -9,6 +9,9 @@ import TransactionVolatilityTable from "@/components/charts/TransactionVolatilit
 import TransactionInsightTable from "@/components/charts/TransactionInsightTable";
 import ChannelCostTable from "@/components/charts/ChannelCostTable";
 import TransactionDistributionChart from "@/components/charts/TransactionDistributionChart";
+import ProviderIntakeVolatilityTable from "@/components/charts/ProviderIntakeVolatilityTable";
+import ProviderTransactionVolatilityTable from "@/components/charts/ProviderTransactionVolatilityTable";
+import ProviderDistributionChart from "@/components/charts/ProviderDistributionChart";
 
 type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
