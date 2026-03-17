@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ResponsiveContainer,
@@ -21,10 +21,17 @@ const COLORS = [
   "hsl(45, 80%, 50%)",
 ];
 const OTHER_COLOR = "hsl(0, 0%, 20%)";
-
 const RADIAN = Math.PI / 180;
 
-const industryRaw = [
+// Period multipliers to simulate data variation across periods
+const periodMultipliers: Record<string, number> = {
+  "1天": 0.035,
+  "7天": 0.22,
+  "30天": 1,
+  "90天": 2.8,
+};
+
+const industryBase = [
   { name: "餐饮", value: 3200 },
   { name: "零售", value: 2500 },
   { name: "生活服务", value: 1800 },
@@ -37,22 +44,35 @@ const industryRaw = [
   { name: "家政服务", value: 130 },
 ];
 
-const cardTypeRaw = [
+const cardTypeBase = [
   { name: "借记卡", value: 4200 },
   { name: "贷记卡", value: 3800 },
   { name: "扫码", value: 2600 },
   { name: "外卡", value: 450 },
 ];
 
-const productRaw = [
+const productBase = [
   { name: "收款码", value: 3500 },
   { name: "POS", value: 3100 },
   { name: "扫码盒", value: 2200 },
   { name: "智能POS", value: 1800 },
 ];
 
-const processData = (raw: { name: string; value: number }[]) => {
+// Add slight per-item variance based on period to avoid identical ratios
+const applyPeriod = (raw: { name: string; value: number }[], period: string) => {
+  const mult = periodMultipliers[period] ?? 1;
+  return raw.map((item, i) => ({
+    ...item,
+    value: Math.round(item.value * mult * (1 + (i % 3 === 0 ? 0.08 : i % 3 === 1 ? -0.05 : 0.02) * (period === "30天" ? 0 : 1))),
+  }));
+};
+
+const processData = (raw: { name: string; value: number }[], groupOther: boolean) => {
   const total = raw.reduce((s, d) => s + d.value, 0);
+  if (!groupOther) {
+    const data = raw.map((d) => ({ ...d, percent: ((d.value / total) * 100).toFixed(1) + "%" }));
+    return { data, total };
+  }
   const sorted = [...raw].sort((a, b) => b.value - a.value);
   let cumulative = 0;
   const threshold = total * 0.9;
@@ -72,12 +92,6 @@ const processData = (raw: { name: string; value: number }[]) => {
     ...(otherValue > 0 ? [{ name: "其它", value: otherValue, percent: ((otherValue / total) * 100).toFixed(1) + "%" }] : []),
   ];
   return { data, total };
-};
-
-const dimensionDataMap: Record<DimensionType, { name: string; value: number }[]> = {
-  industry: industryRaw,
-  cardType: cardTypeRaw,
-  product: productRaw,
 };
 
 const dimensionLabels: Record<DimensionType, string> = {
@@ -127,11 +141,37 @@ const renderOuterLabel = ({ cx, cy, midAngle, outerRadius, name, value }: any) =
   );
 };
 
-const TransactionDistributionChart = () => {
+interface Props {
+  selectedCardTypes: string[];
+  selectedProducts: string[];
+}
+
+const TransactionDistributionChart = ({ selectedCardTypes, selectedProducts }: Props) => {
   const [period, setPeriod] = useState<string>("30天");
   const [dimension, setDimension] = useState<DimensionType>("industry");
 
-  const { data, total } = processData(dimensionDataMap[dimension]);
+  const { data, total } = useMemo(() => {
+    let baseData: { name: string; value: number }[];
+    let groupOther = true;
+
+    if (dimension === "industry") {
+      baseData = industryBase;
+      groupOther = true;
+    } else if (dimension === "cardType") {
+      baseData = selectedCardTypes.length > 0
+        ? cardTypeBase.filter((d) => selectedCardTypes.includes(d.name))
+        : cardTypeBase;
+      groupOther = false; // No "其它" for cardType
+    } else {
+      baseData = selectedProducts.length > 0
+        ? productBase.filter((d) => selectedProducts.includes(d.name))
+        : productBase;
+      groupOther = true;
+    }
+
+    const periodAdjusted = applyPeriod(baseData, period);
+    return processData(periodAdjusted, groupOther);
+  }, [dimension, period, selectedCardTypes, selectedProducts]);
 
   return (
     <Card className="border-border">

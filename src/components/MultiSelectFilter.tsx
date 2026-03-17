@@ -1,24 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, X } from "lucide-react";
 
 interface Props {
   label: string;
   options: string[];
+  onChange?: (selected: string[]) => void;
 }
 
-const MultiSelectFilter = ({ label, options }: Props) => {
+const MultiSelectFilter = ({ label, options, onChange }: Props) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
 
   const isAll = selected.length === 0;
 
   const toggle = (val: string) => {
-    setSelected((prev) =>
-      prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
-    );
+    setSelected((prev) => {
+      const next = prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val];
+      return next;
+    });
   };
 
   const selectAll = () => setSelected([]);
+
+  useEffect(() => {
+    onChange?.(selected);
+  }, [selected, onChange]);
 
   const displayText = isAll ? "全部" : selected.join("、");
 
