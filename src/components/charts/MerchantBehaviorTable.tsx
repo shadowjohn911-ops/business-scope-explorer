@@ -14,10 +14,10 @@ const nonZeroRate = () => {
 };
 
 const generateRow = () => {
-  const v90 = Math.floor(Math.random() * 499) + 1;
-  const v30 = Math.floor(Math.random() * v90) + 1;
-  const v7 = Math.floor(Math.random() * v30) + 1;
-  const v1 = Math.floor(Math.random() * v7) + 1;
+  const v90 = Math.floor(Math.random() * 489) + 11;
+  const v30 = Math.floor(Math.random() * (v90 - 11)) + 11;
+  const v7 = Math.floor(Math.random() * (v30 - 11)) + 11;
+  const v1 = Math.floor(Math.random() * (v7 - 11)) + 11;
   return {
     "1天": { value: v1, rate: nonZeroRate() },
     "7天": { value: v7, rate: nonZeroRate() },
