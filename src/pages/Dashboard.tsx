@@ -65,12 +65,11 @@ const Dashboard = () => {
             )}
 
             {activeModule === "transaction" && (
-              <div className="bg-card rounded-lg border border-border p-5 text-center">
-                <p className="text-muted-foreground text-xs">
-                  {roleLabels[roleType]} · 交易洞察 数据区域
-                </p>
-                <p className="text-[10px] text-muted-foreground mt-1.5">选择维度筛选后查看数据</p>
-              </div>
+              <>
+                <TransactionInsightTable />
+                {roleType === "branch" && <ChannelCostTable />}
+                <TransactionDistributionChart />
+              </>
             )}
 
             {activeModule === "organization" && roleType === "branch" && (
