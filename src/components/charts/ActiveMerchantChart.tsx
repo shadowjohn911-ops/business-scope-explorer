@@ -16,12 +16,21 @@ import {
 type Dimension = "survival" | "industry";
 
 const survivalDays = [1, 14, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780];
+const peakValue = 133;
+const startValue = 25;
 const mean = 120;
 const stdDev = 150;
-const survivalData = survivalDays.map((day) => {
+
+const rawCurve = survivalDays.map((day) => {
   const z = (day - mean) / stdDev;
-  const density = Math.exp(-0.5 * z * z) / (stdDev * Math.sqrt(2 * Math.PI));
-  const count = Math.max(1, Math.round(density * 50000));
+  return Math.exp(-0.5 * z * z);
+});
+const rawMax = Math.max(...rawCurve);
+const rawMin = rawCurve[0]; // value at day 1
+
+const survivalData = survivalDays.map((day, i) => {
+  const normalized = (rawCurve[i] - rawMin) / (rawMax - rawMin);
+  const count = Math.max(1, Math.round(startValue + normalized * (peakValue - startValue)));
   return { day: `${day}`, count };
 });
 
