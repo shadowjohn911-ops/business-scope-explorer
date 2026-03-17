@@ -15,24 +15,19 @@ import {
 
 type Dimension = "survival" | "industry";
 
-const survivalDays = [1, 14, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600, 630, 660, 690, 720, 750, 780];
-const peakValue = 133;
-const startValue = 25;
-const mean = 120;
-const stdDev = 150;
+// Custom survival curve: starts at 25, peaks at 120→133, 690→15, 750+→25
+const survivalKeyPoints: [number, number][] = [
+  [1, 25], [14, 35], [30, 55], [60, 95], [90, 120], [120, 133],
+  [150, 125], [180, 110], [210, 95], [240, 82], [270, 70], [300, 60],
+  [330, 52], [360, 45], [390, 39], [420, 34], [450, 30], [480, 27],
+  [510, 24], [540, 21], [570, 19], [600, 17], [630, 16], [660, 15],
+  [690, 15], [720, 18], [750, 25],
+];
 
-const rawCurve = survivalDays.map((day) => {
-  const z = (day - mean) / stdDev;
-  return Math.exp(-0.5 * z * z);
-});
-const rawMax = Math.max(...rawCurve);
-const rawMin = rawCurve[0]; // value at day 1
-
-const survivalData = survivalDays.map((day, i) => {
-  const normalized = (rawCurve[i] - rawMin) / (rawMax - rawMin);
-  const count = Math.max(1, Math.round(startValue + normalized * (peakValue - startValue)));
-  return { day: `${day}`, count };
-});
+const survivalData = survivalKeyPoints.map(([day, count], i) => ({
+  day: i === survivalKeyPoints.length - 1 ? "750+" : `${day}`,
+  count,
+}));
 
 const COLORS = [
   "hsl(215, 90%, 50%)",
