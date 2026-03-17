@@ -25,17 +25,19 @@ const Dashboard = () => {
   const roleType = (role as RoleType) || "branch";
   const [activeModule, setActiveModule] = useState<ModuleType>("merchant");
   const [ownerLevel1, setOwnerLevel1] = useState<string>("全部");
+  const [selectedCardTypes, setSelectedCardTypes] = useState<string[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
 
-  // Reset owner level1 when module changes
   const handleModuleChange = (m: ModuleType) => {
     setActiveModule(m);
     setOwnerLevel1("全部");
+    setSelectedCardTypes([]);
+    setSelectedProducts([]);
   };
 
   return (
     <div className="min-h-screen bg-background flex flex-col items-center">
       <div className="w-full max-w-md min-h-screen flex flex-col">
-        {/* Top bar */}
         <div className="sticky top-0 z-10 bg-card border-b border-border">
           <div className="flex items-center h-11 px-3">
             <button onClick={() => navigate("/")} className="p-1 -ml-1">
@@ -45,16 +47,18 @@ const Dashboard = () => {
               {roleLabels[roleType]}数据看板
             </h1>
           </div>
-
-          {/* Module tabs */}
           <ModuleTabs active={activeModule} onChange={handleModuleChange} role={roleType} />
         </div>
 
-        {/* Filters */}
         <div className="flex-1 px-3 pt-3 pb-6">
-          <DimensionFilters role={roleType} module={activeModule} onOwnerLevel1Change={setOwnerLevel1} />
+          <DimensionFilters
+            role={roleType}
+            module={activeModule}
+            onOwnerLevel1Change={setOwnerLevel1}
+            onCardTypeChange={setSelectedCardTypes}
+            onProductChange={setSelectedProducts}
+          />
 
-          {/* Data content area */}
           <div className="mt-4 space-y-3">
             {activeModule === "merchant" && (
               <>
@@ -68,7 +72,10 @@ const Dashboard = () => {
               <>
                 <TransactionInsightTable />
                 {roleType === "branch" && <ChannelCostTable />}
-                <TransactionDistributionChart />
+                <TransactionDistributionChart
+                  selectedCardTypes={selectedCardTypes}
+                  selectedProducts={selectedProducts}
+                />
               </>
             )}
 

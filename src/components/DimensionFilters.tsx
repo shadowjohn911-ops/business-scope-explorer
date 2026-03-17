@@ -31,9 +31,11 @@ interface Props {
   role: RoleType;
   module: ModuleType;
   onOwnerLevel1Change?: (val: string) => void;
+  onCardTypeChange?: (selected: string[]) => void;
+  onProductChange?: (selected: string[]) => void;
 }
 
-const DimensionFilters = ({ role, module, onOwnerLevel1Change }: Props) => {
+const DimensionFilters = ({ role, module, onOwnerLevel1Change, onCardTypeChange, onProductChange }: Props) => {
   const config = getConfig(module);
 
   return (
@@ -49,11 +51,11 @@ const DimensionFilters = ({ role, module, onOwnerLevel1Change }: Props) => {
       )}
 
       {config.showCardType && (
-        <MultiSelectFilter label="卡种" options={cardTypes} />
+        <MultiSelectFilter label="卡种" options={cardTypes} onChange={onCardTypeChange} />
       )}
 
       {config.showProduct && (
-        <MultiSelectFilter label="产品" options={products} />
+        <MultiSelectFilter label="产品" options={products} onChange={onProductChange} />
       )}
     </div>
   );
