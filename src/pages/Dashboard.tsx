@@ -91,10 +91,10 @@ const Dashboard = () => {
                     <ProviderDistributionChart />
                   </>
                 )}
-                <div className="bg-card rounded-lg border border-border p-5 text-center">
-                  <p className="text-muted-foreground text-xs font-medium">合作方洞察</p>
-                  <p className="text-[10px] text-muted-foreground mt-1.5">合作方相关数据展示区域</p>
-                </div>
+                <PartnerBehaviorTable />
+                <PartnerIntakeVolatilityTable />
+                <PartnerTransactionVolatilityTable />
+                <PartnerDistributionChart />
               </>
             )}
 
@@ -106,10 +106,10 @@ const Dashboard = () => {
                     <p className="text-[10px] text-muted-foreground mt-1.5">盟友相关数据展示区域</p>
                   </div>
                 )}
-                <div className="bg-card rounded-lg border border-border p-5 text-center">
-                  <p className="text-muted-foreground text-xs font-medium">合作方洞察</p>
-                  <p className="text-[10px] text-muted-foreground mt-1.5">合作方相关数据展示区域</p>
-                </div>
+                <PartnerBehaviorTable />
+                <PartnerIntakeVolatilityTable />
+                <PartnerTransactionVolatilityTable />
+                <PartnerDistributionChart />
               </>
             )}
           </div>

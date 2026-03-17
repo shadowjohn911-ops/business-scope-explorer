@@ -1,0 +1,95 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { HelpCircle } from "lucide-react";
+
+const periods = ["1天", "7天", "30天", "90天"] as const;
+const behaviors = ["入网", "首次进件", "活跃"] as const;
+
+const nonZeroRate = () => {
+  let r = 0;
+  while (r === 0) r = Math.floor(Math.random() * 201) - 100;
+  return r;
+};
+
+const generateRow = () => {
+  const v90 = Math.floor(Math.random() * 489) + 11;
+  const v30 = Math.floor(Math.random() * (v90 - 11)) + 11;
+  const v7 = Math.floor(Math.random() * (v30 - 11)) + 11;
+  const v1 = Math.floor(Math.random() * (v7 - 11)) + 11;
+  return {
+    "1天": { value: v1, rate: nonZeroRate() },
+    "7天": { value: v7, rate: nonZeroRate() },
+    "30天": { value: v30, rate: nonZeroRate() },
+    "90天": { value: v90, rate: nonZeroRate() },
+  };
+};
+
+const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
+behaviors.forEach((b) => {
+  mockData[b] = generateRow();
+});
+
+const PartnerBehaviorTable = () => {
+  return (
+    <Card className="border-border">
+      <CardHeader className="px-3 py-2.5 pb-0">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-xs font-semibold text-foreground">合作方行为洞察</CardTitle>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="p-0.5 rounded-full hover:bg-muted transition-colors">
+                <HelpCircle className="w-3.5 h-3.5 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 text-[11px] leading-relaxed text-foreground" side="left" align="start">
+              表格中的数值表示在指定回溯周期内（如近7日、近30日）发生过该行为的合作方数量；百分比表示当前周期相较于上一周期的环比变化率（正数表示增长，负数表示下降）。
+            </PopoverContent>
+          </Popover>
+        </div>
+      </CardHeader>
+      <CardContent className="px-3 py-2.5">
+        <div className="overflow-x-auto">
+          <table className="w-full text-[11px]">
+            <thead>
+              <tr className="border-b border-border">
+                <th className="relative w-16 h-10 p-0 overflow-hidden">
+                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 64 40" preserveAspectRatio="none">
+                    <line x1="0" y1="0" x2="64" y2="40" stroke="hsl(var(--border))" strokeWidth="1" />
+                  </svg>
+                  <span className="absolute top-0.5 right-1 text-[9px] font-medium text-muted-foreground">回溯周期</span>
+                  <span className="absolute bottom-0.5 left-1 text-[9px] font-medium text-muted-foreground">合作方行为</span>
+                </th>
+                {periods.map((p) => (
+                  <th key={p} className="text-center py-1.5 px-1 font-medium text-muted-foreground">
+                    {p}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {behaviors.map((b) => (
+                <tr key={b} className="border-b border-border last:border-0">
+                  <td className="py-2 pr-2 font-medium text-foreground">{b}</td>
+                  {periods.map((p) => {
+                    const { value, rate } = mockData[b][p];
+                    const isPositive = rate > 0;
+                    return (
+                      <td key={p} className="text-center py-2 px-1">
+                        <div className="font-semibold text-foreground">{value}</div>
+                        <div className={`text-[10px] mt-0.5 ${isPositive ? "text-emerald-600" : "text-red-500"}`}>
+                          {isPositive ? "+" : ""}{rate}%
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default PartnerBehaviorTable;
