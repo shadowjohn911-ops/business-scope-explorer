@@ -7,16 +7,22 @@ import { useState } from "react";
 const periods = ["1天", "7天", "30天", "90天"] as const;
 const behaviors = ["入网", "首刷", "交易"] as const;
 
+const nonZeroRate = () => {
+  let r = 0;
+  while (r === 0) r = Math.floor(Math.random() * 201) - 100;
+  return r;
+};
+
 const generateRow = () => {
-  const v90 = Math.floor(Math.random() * 500);
-  const v30 = Math.floor(Math.random() * (v90 + 1));
-  const v7 = Math.floor(Math.random() * (v30 + 1));
-  const v1 = Math.floor(Math.random() * (v7 + 1));
+  const v90 = Math.floor(Math.random() * 499) + 1;
+  const v30 = Math.floor(Math.random() * v90) + 1;
+  const v7 = Math.floor(Math.random() * v30) + 1;
+  const v1 = Math.floor(Math.random() * v7) + 1;
   return {
-    "1天": { value: v1, rate: Math.floor(Math.random() * 201) - 100 },
-    "7天": { value: v7, rate: Math.floor(Math.random() * 201) - 100 },
-    "30天": { value: v30, rate: Math.floor(Math.random() * 201) - 100 },
-    "90天": { value: v90, rate: Math.floor(Math.random() * 201) - 100 },
+    "1天": { value: v1, rate: nonZeroRate() },
+    "7天": { value: v7, rate: nonZeroRate() },
+    "30天": { value: v30, rate: nonZeroRate() },
+    "90天": { value: v90, rate: nonZeroRate() },
   };
 };
 

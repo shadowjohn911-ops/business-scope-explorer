@@ -80,14 +80,15 @@ const industryData = [
 
 const RADIAN = Math.PI / 180;
 
-// Inner label: show percentage only
-const renderInnerLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+// Inner label: show percentage as value/total
+const renderInnerLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, value }: any) => {
   const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  const pct = ((value / total) * 100).toFixed(1);
   return (
     <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontSize={7} fill="white" fontWeight={600}>
-      {(percent * 100).toFixed(1)}%
+      {pct}%
     </text>
   );
 };
