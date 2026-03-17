@@ -53,7 +53,7 @@ const getBarColor = (band: string) => {
   return "hsl(215, 90%, 50%)";
 };
 
-const generateDetails = (band: string) => {
+const generateDetails = (band: string, entityLabel: string) => {
   const [minPct, maxPct] = bandRanges[band] || [-50, 50];
   return Array.from({ length: 5 }, (_, i) => {
     const previousCount = Math.floor(Math.random() * 200) + 10;
@@ -61,7 +61,7 @@ const generateDetails = (band: string) => {
     const currentCount = Math.max(1, Math.round(previousCount * (1 + volatility / 100)));
     return {
       providerId: `S${String(1000 + i).padStart(6, "0")}`,
-      providerName: `服务商${["甲", "乙", "丙", "丁", "戊"][i]}`,
+      providerName: `${entityLabel}${["甲", "乙", "丙", "丁", "戊"][i]}`,
       currentCount,
       previousCount,
       volatility,
@@ -71,7 +71,11 @@ const generateDetails = (band: string) => {
 
 type DetailSortField = "currentCount" | "volatility";
 
-const ProviderIntakeVolatilityTable = () => {
+interface Props {
+  entityLabel?: string;
+}
+
+const ProviderIntakeVolatilityTable = ({ entityLabel = "服务商" }: Props) => {
   const [activePeriod, setActivePeriod] = useState<string>("7天");
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailTitle, setDetailTitle] = useState("");
@@ -84,7 +88,7 @@ const ProviderIntakeVolatilityTable = () => {
     if (value < 100) {
       setDetailTitle(`${band} · ${period} 明细`);
       setDetailPeriod(period);
-      setDetails(generateDetails(band));
+      setDetails(generateDetails(band, entityLabel));
       setDetailOpen(true);
     }
   };
@@ -106,7 +110,7 @@ const ProviderIntakeVolatilityTable = () => {
       <Card className="border-border">
         <CardHeader className="px-3 py-2.5 pb-1">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-xs font-semibold text-foreground">服务商进件洞察</CardTitle>
+            <CardTitle className="text-xs font-semibold text-foreground">{entityLabel}进件洞察</CardTitle>
             <div className="flex items-center gap-1.5">
               <div className="flex bg-muted rounded-md p-0.5">
                 {periods.map((p) => (
@@ -128,10 +132,10 @@ const ProviderIntakeVolatilityTable = () => {
                   </button>
                 </PopoverTrigger>
                 <PopoverContent className="w-80 text-[11px] leading-relaxed text-foreground" side="left" align="start">
-                  表格中的数值表示在指定回溯周期内（如近7日），进件数较上一周期增长率落在该区间的服务商数量；百分比表示该区间服务商数量相较于上一周期的环比变化率（正数表示增加，负数表示减少）。
+                  表格中的数值表示在指定回溯周期内（如近7日），进件数较上一周期增长率落在该区间的{entityLabel}数量；百分比表示该区间{entityLabel}数量相较于上一周期的环比变化率（正数表示增加，负数表示减少）。
                   <br /><br />
                   <span className="text-muted-foreground">
-                    示例：若"⬆200%以上"对应"7天"的数值为5，比例为+25%，则表示当前周期（如3/10-3/16）内有5个服务商的进件数较上一周期（如3/3-3/9）增长超过2倍，且这类服务商的数量较上一周期增加了25%。
+                    示例：若"⬆200%以上"对应"7天"的数值为5，比例为+25%，则表示当前周期（如3/10-3/16）内有5个{entityLabel}的进件数较上一周期（如3/3-3/9）增长超过2倍，且这类{entityLabel}的数量较上一周期增加了25%。
                   </span>
                 </PopoverContent>
               </Popover>
@@ -189,15 +193,15 @@ const ProviderIntakeVolatilityTable = () => {
             <table className="w-full text-[10px]">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">服务商编号</th>
-                  <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">服务商名称</th>
+                  <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">{entityLabel}编号</th>
+                  <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">{entityLabel}名称</th>
+                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天进件数(上期)</th>
                   <th
                     className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground"
                     onClick={() => handleSort("currentCount")}
                   >
                     <span className="inline-flex items-center gap-0.5">{periodDays}天进件数(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
                   </th>
-                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天进件数(上期)</th>
                   <th
                     className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground"
                     onClick={() => handleSort("volatility")}
@@ -211,8 +215,8 @@ const ProviderIntakeVolatilityTable = () => {
                   <tr key={i} className="border-b border-border last:border-0">
                     <td className="py-1.5 px-1 text-foreground">{d.providerId}</td>
                     <td className="py-1.5 px-1 text-foreground">{d.providerName}</td>
-                    <td className="py-1.5 px-1 text-right text-foreground font-medium">{d.currentCount}</td>
                     <td className="py-1.5 px-1 text-right text-muted-foreground">{d.previousCount}</td>
+                    <td className="py-1.5 px-1 text-right text-foreground font-medium">{d.currentCount}</td>
                     <td className={`py-1.5 px-1 text-right font-medium ${d.volatility > 0 ? "text-emerald-600" : "text-red-500"}`}>
                       {d.volatility > 0 ? "+" : ""}{d.volatility}%
                     </td>

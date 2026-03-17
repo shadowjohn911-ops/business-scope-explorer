@@ -73,7 +73,11 @@ const generateDetails = (band: string) => {
 
 type DetailSortField = "currentCount" | "volatility";
 
-const PartnerIntakeVolatilityTable = () => {
+interface Props {
+  disableDetails?: boolean;
+}
+
+const PartnerIntakeVolatilityTable = ({ disableDetails = false }: Props) => {
   const [activePeriod, setActivePeriod] = useState<string>("7天");
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailTitle, setDetailTitle] = useState("");
@@ -83,7 +87,7 @@ const PartnerIntakeVolatilityTable = () => {
   const [sortAsc, setSortAsc] = useState(false);
 
   const handleCellClick = (band: string, period: string, value: number) => {
-    if (value < 100) {
+    if (!disableDetails && value < 100) {
       setDetailTitle(`${band} · ${period} 明细`);
       setDetailPeriod(period);
       setDetails(generateDetails(band));
@@ -146,7 +150,7 @@ const PartnerIntakeVolatilityTable = () => {
               const { value: count, rate } = mockData[band][activePeriod];
               const maxCount = Math.max(...bands.map((b) => mockData[b][activePeriod].value));
               const barWidth = maxCount > 0 ? (count / maxCount) * 100 : 0;
-              const clickable = count < 100;
+              const clickable = !disableDetails && count < 100;
               const isPositive = rate > 0;
 
               return (
@@ -181,54 +185,56 @@ const PartnerIntakeVolatilityTable = () => {
         </CardContent>
       </Card>
 
-      <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
-        <DialogContent className="max-w-md max-h-[80vh] overflow-auto p-4">
-          <DialogHeader className="pb-2">
-            <DialogTitle className="text-sm">{detailTitle}</DialogTitle>
-            <DialogDescription className="text-[10px] text-muted-foreground">点击表头排序</DialogDescription>
-          </DialogHeader>
-          <div className="overflow-x-auto">
-            <table className="w-full text-[10px]">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">合作方编号</th>
-                  <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">合作方名称</th>
-                  <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">服务商编号</th>
-                  <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">服务商名称</th>
-                  <th
-                    className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground"
-                    onClick={() => handleSort("currentCount")}
-                  >
-                    <span className="inline-flex items-center gap-0.5">{periodDays}天进件数(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
-                  </th>
-                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天进件数(上期)</th>
-                  <th
-                    className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground"
-                    onClick={() => handleSort("volatility")}
-                  >
-                    <span className="inline-flex items-center gap-0.5">进件波动比例 <ArrowUpDown className="w-2.5 h-2.5" /></span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedDetails.map((d, i) => (
-                  <tr key={i} className="border-b border-border last:border-0">
-                    <td className="py-1.5 px-1 text-foreground">{d.partnerId}</td>
-                    <td className="py-1.5 px-1 text-foreground">{d.partnerName}</td>
-                    <td className="py-1.5 px-1 text-muted-foreground">{d.providerId}</td>
-                    <td className="py-1.5 px-1 text-muted-foreground">{d.providerName}</td>
-                    <td className="py-1.5 px-1 text-right text-foreground font-medium">{d.currentCount}</td>
-                    <td className="py-1.5 px-1 text-right text-muted-foreground">{d.previousCount}</td>
-                    <td className={`py-1.5 px-1 text-right font-medium ${d.volatility > 0 ? "text-emerald-600" : "text-red-500"}`}>
-                      {d.volatility > 0 ? "+" : ""}{d.volatility}%
-                    </td>
+      {!disableDetails && (
+        <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
+          <DialogContent className="max-w-md max-h-[80vh] overflow-auto p-4">
+            <DialogHeader className="pb-2">
+              <DialogTitle className="text-sm">{detailTitle}</DialogTitle>
+              <DialogDescription className="text-[10px] text-muted-foreground">点击表头排序</DialogDescription>
+            </DialogHeader>
+            <div className="overflow-x-auto">
+              <table className="w-full text-[10px]">
+                <thead>
+                  <tr className="border-b border-border">
+                    <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">合作方编号</th>
+                    <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">合作方名称</th>
+                    <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">服务商编号</th>
+                    <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">服务商名称</th>
+                    <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天进件数(上期)</th>
+                    <th
+                      className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground"
+                      onClick={() => handleSort("currentCount")}
+                    >
+                      <span className="inline-flex items-center gap-0.5">{periodDays}天进件数(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
+                    </th>
+                    <th
+                      className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground"
+                      onClick={() => handleSort("volatility")}
+                    >
+                      <span className="inline-flex items-center gap-0.5">进件波动比例 <ArrowUpDown className="w-2.5 h-2.5" /></span>
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </DialogContent>
-      </Dialog>
+                </thead>
+                <tbody>
+                  {sortedDetails.map((d, i) => (
+                    <tr key={i} className="border-b border-border last:border-0">
+                      <td className="py-1.5 px-1 text-foreground">{d.partnerId}</td>
+                      <td className="py-1.5 px-1 text-foreground">{d.partnerName}</td>
+                      <td className="py-1.5 px-1 text-muted-foreground">{d.providerId}</td>
+                      <td className="py-1.5 px-1 text-muted-foreground">{d.providerName}</td>
+                      <td className="py-1.5 px-1 text-right text-muted-foreground">{d.previousCount}</td>
+                      <td className="py-1.5 px-1 text-right text-foreground font-medium">{d.currentCount}</td>
+                      <td className={`py-1.5 px-1 text-right font-medium ${d.volatility > 0 ? "text-emerald-600" : "text-red-500"}`}>
+                        {d.volatility > 0 ? "+" : ""}{d.volatility}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 };
