@@ -85,10 +85,11 @@ const Dashboard = () => {
             {activeModule === "organization" && roleType === "branch" && (
               <>
                 {ownerLevel1 !== "自有" && (
-                  <div className="bg-card rounded-lg border border-border p-5 text-center">
-                    <p className="text-muted-foreground text-xs font-medium">服务商洞察</p>
-                    <p className="text-[10px] text-muted-foreground mt-1.5">服务商相关数据展示区域</p>
-                  </div>
+                  <>
+                    <ProviderIntakeVolatilityTable />
+                    <ProviderTransactionVolatilityTable />
+                    <ProviderDistributionChart />
+                  </>
                 )}
                 <div className="bg-card rounded-lg border border-border p-5 text-center">
                   <p className="text-muted-foreground text-xs font-medium">合作方洞察</p>
