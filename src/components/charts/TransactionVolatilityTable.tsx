@@ -31,12 +31,18 @@ const bandRanges: Record<string, [number, number]> = {
 const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
 const totalPerPeriod: Record<string, number> = {};
 
+const nonZeroRate = () => {
+  let r = 0;
+  while (r === 0) r = Math.floor(Math.random() * 200) - 100;
+  return r;
+};
+
 bands.forEach((band) => {
   mockData[band] = {};
   periods.forEach((p) => {
     const base = band === "-50%~50%" ? 30 : 8;
     const value = Math.floor(Math.random() * base) + 1;
-    mockData[band][p] = { value, rate: Math.floor(Math.random() * 200) - 100 };
+    mockData[band][p] = { value, rate: nonZeroRate() };
     totalPerPeriod[p] = (totalPerPeriod[p] || 0) + value;
   });
 });
