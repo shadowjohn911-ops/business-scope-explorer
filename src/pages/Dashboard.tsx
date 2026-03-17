@@ -6,6 +6,9 @@ import DimensionFilters from "@/components/DimensionFilters";
 import MerchantBehaviorTable from "@/components/charts/MerchantBehaviorTable";
 import ActiveMerchantChart from "@/components/charts/ActiveMerchantChart";
 import TransactionVolatilityTable from "@/components/charts/TransactionVolatilityTable";
+import TransactionInsightTable from "@/components/charts/TransactionInsightTable";
+import ChannelCostTable from "@/components/charts/ChannelCostTable";
+import TransactionDistributionChart from "@/components/charts/TransactionDistributionChart";
 
 type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
