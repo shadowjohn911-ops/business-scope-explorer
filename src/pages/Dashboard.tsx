@@ -12,6 +12,10 @@ import TransactionDistributionChart from "@/components/charts/TransactionDistrib
 import ProviderIntakeVolatilityTable from "@/components/charts/ProviderIntakeVolatilityTable";
 import ProviderTransactionVolatilityTable from "@/components/charts/ProviderTransactionVolatilityTable";
 import ProviderDistributionChart from "@/components/charts/ProviderDistributionChart";
+import PartnerBehaviorTable from "@/components/charts/PartnerBehaviorTable";
+import PartnerIntakeVolatilityTable from "@/components/charts/PartnerIntakeVolatilityTable";
+import PartnerTransactionVolatilityTable from "@/components/charts/PartnerTransactionVolatilityTable";
+import PartnerDistributionChart from "@/components/charts/PartnerDistributionChart";
 
 type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
