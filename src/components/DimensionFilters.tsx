@@ -36,7 +36,7 @@ interface Props {
   onBusinessModeChange?: (selected: string[]) => void;
 }
 
-const DimensionFilters = ({ role, module, onOwnerLevel1Change, onCardTypeChange, onProductChange }: Props) => {
+const DimensionFilters = ({ role, module, onOwnerLevel1Change, onCardTypeChange, onProductChange, onBusinessModeChange }: Props) => {
   const config = getConfig(module);
 
   return (
