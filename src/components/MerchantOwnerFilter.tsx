@@ -15,6 +15,7 @@ const mockProviders = [
 
 interface Props {
   role: RoleType;
+  module?: string;
   onLevel1Change?: (val: string) => void;
 }
 
