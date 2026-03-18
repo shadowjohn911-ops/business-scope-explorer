@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import ModuleTabs from "@/components/ModuleTabs";
 import DimensionFilters from "@/components/DimensionFilters";
 import MerchantBehaviorTable from "@/components/charts/MerchantBehaviorTable";
@@ -34,15 +34,22 @@ const Dashboard = () => {
   const [ownerLevel1, setOwnerLevel1] = useState<string>("全部");
   const [selectedCardTypes, setSelectedCardTypes] = useState<string[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [selectedBusinessModes, setSelectedBusinessModes] = useState<string[]>([]);
 
   const handleModuleChange = (m: ModuleType) => {
     setActiveModule(m);
     setOwnerLevel1("全部");
     setSelectedCardTypes([]);
     setSelectedProducts([]);
+    setSelectedBusinessModes([]);
   };
 
-  // For provider role, when ownerLevel1 is "全部" or "盟友", disable partner detail clicks
+  // Filter key to force data regeneration when any filter changes
+  const filterKey = useMemo(
+    () => `${ownerLevel1}-${selectedBusinessModes.join(",")}-${selectedCardTypes.join(",")}-${selectedProducts.join(",")}`,
+    [ownerLevel1, selectedBusinessModes, selectedCardTypes, selectedProducts]
+  );
+
   const disablePartnerDetails = roleType === "provider" && (ownerLevel1 === "全部" || ownerLevel1 === "盟友");
 
   return (
@@ -67,22 +74,24 @@ const Dashboard = () => {
             onOwnerLevel1Change={setOwnerLevel1}
             onCardTypeChange={setSelectedCardTypes}
             onProductChange={setSelectedProducts}
+            onBusinessModeChange={setSelectedBusinessModes}
           />
 
           <div className="mt-4 space-y-3">
             {activeModule === "merchant" && (
               <>
-                <MerchantBehaviorTable />
-                <ActiveMerchantChart />
-                <TransactionVolatilityTable />
+                <MerchantBehaviorTable key={`mb-${filterKey}`} />
+                <ActiveMerchantChart key={`ac-${filterKey}`} />
+                <TransactionVolatilityTable key={`tv-${filterKey}`} />
               </>
             )}
 
             {activeModule === "transaction" && (
               <>
-                <TransactionInsightTable />
-                {roleType === "branch" && <ChannelCostTable />}
+                <TransactionInsightTable key={`ti-${filterKey}`} />
+                {roleType === "branch" && <ChannelCostTable key={`cc-${filterKey}`} />}
                 <TransactionDistributionChart
+                  key={`td-${filterKey}`}
                   selectedCardTypes={selectedCardTypes}
                   selectedProducts={selectedProducts}
                 />
@@ -93,15 +102,15 @@ const Dashboard = () => {
               <>
                 {ownerLevel1 !== "自有" && (
                   <>
-                    <ProviderIntakeVolatilityTable />
-                    <ProviderTransactionVolatilityTable />
-                    <ProviderDistributionChart />
+                    <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} />
+                    <ProviderTransactionVolatilityTable key={`ptv-${filterKey}`} />
+                    <ProviderDistributionChart key={`pd-${filterKey}`} />
                   </>
                 )}
-                <PartnerBehaviorTable />
-                <PartnerIntakeVolatilityTable />
-                <PartnerTransactionVolatilityTable />
-                <PartnerDistributionChart />
+                <PartnerBehaviorTable key={`pb-${filterKey}`} />
+                <PartnerIntakeVolatilityTable key={`piv2-${filterKey}`} />
+                <PartnerTransactionVolatilityTable key={`ptv2-${filterKey}`} />
+                <PartnerDistributionChart key={`pdc-${filterKey}`} />
               </>
             )}
 
@@ -109,15 +118,15 @@ const Dashboard = () => {
               <>
                 {ownerLevel1 !== "自有" && (
                   <>
-                    <ProviderIntakeVolatilityTable entityLabel="盟友" />
-                    <ProviderTransactionVolatilityTable entityLabel="盟友" />
-                    <ProviderDistributionChart entityLabel="盟友" />
+                    <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} entityLabel="盟友" />
+                    <ProviderTransactionVolatilityTable key={`ptv-${filterKey}`} entityLabel="盟友" />
+                    <ProviderDistributionChart key={`pd-${filterKey}`} entityLabel="盟友" />
                   </>
                 )}
-                <PartnerBehaviorTable disableDetails={disablePartnerDetails} />
-                <PartnerIntakeVolatilityTable disableDetails={disablePartnerDetails} />
-                <PartnerTransactionVolatilityTable disableDetails={disablePartnerDetails} />
-                <PartnerDistributionChart />
+                <PartnerBehaviorTable key={`pb-${filterKey}`} disableDetails={disablePartnerDetails} />
+                <PartnerIntakeVolatilityTable key={`piv2-${filterKey}`} disableDetails={disablePartnerDetails} />
+                <PartnerTransactionVolatilityTable key={`ptv2-${filterKey}`} disableDetails={disablePartnerDetails} />
+                <PartnerDistributionChart key={`pdc-${filterKey}`} />
               </>
             )}
           </div>

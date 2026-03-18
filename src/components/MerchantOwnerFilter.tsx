@@ -15,10 +15,11 @@ const mockProviders = [
 
 interface Props {
   role: RoleType;
+  module?: string;
   onLevel1Change?: (val: string) => void;
 }
 
-const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
+const MerchantOwnerFilter = ({ role, module, onLevel1Change }: Props) => {
   const [open, setOpen] = useState(false);
   const [level1, setLevel1] = useState<string>("全部");
   const [level2Selected, setLevel2Selected] = useState<string[]>([]);
@@ -32,11 +33,13 @@ const MerchantOwnerFilter = ({ role, onLevel1Change }: Props) => {
   };
 
   const getLevel2Options = (): string[] | null => {
-    if (role === "partner") return null; // partner has no level 2
+    if (role === "partner") return null;
     if (level1 === "全部") return null;
-    if (level1 === "自有") return ["自拓", "合作方"];
-    // 团队 or 盟友 -> searchable provider list
-    return null; // handled separately
+    if (level1 === "自有") {
+      if (role === "provider" && module === "organization") return null;
+      return ["自拓", "合作方"];
+    }
+    return null;
   };
 
   const isTeamOrAlly = (role === "branch" && level1 === "团队") || (role === "provider" && level1 === "盟友");
