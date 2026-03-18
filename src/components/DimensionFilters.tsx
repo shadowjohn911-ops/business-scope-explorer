@@ -33,6 +33,7 @@ interface Props {
   onOwnerLevel1Change?: (val: string) => void;
   onCardTypeChange?: (selected: string[]) => void;
   onProductChange?: (selected: string[]) => void;
+  onBusinessModeChange?: (selected: string[]) => void;
 }
 
 const DimensionFilters = ({ role, module, onOwnerLevel1Change, onCardTypeChange, onProductChange }: Props) => {
