@@ -33,11 +33,13 @@ const MerchantOwnerFilter = ({ role, module, onLevel1Change }: Props) => {
   };
 
   const getLevel2Options = (): string[] | null => {
-    if (role === "partner") return null; // partner has no level 2
+    if (role === "partner") return null;
     if (level1 === "全部") return null;
-    if (level1 === "自有") return ["自拓", "合作方"];
-    // 团队 or 盟友 -> searchable provider list
-    return null; // handled separately
+    if (level1 === "自有") {
+      if (role === "provider" && module === "organization") return null;
+      return ["自拓", "合作方"];
+    }
+    return null;
   };
 
   const isTeamOrAlly = (role === "branch" && level1 === "团队") || (role === "provider" && level1 === "盟友");

@@ -44,11 +44,11 @@ const DimensionFilters = ({ role, module, onOwnerLevel1Change, onCardTypeChange,
       <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wider">筛选维度</h3>
 
       {config.showBusinessMode && (
-        <MultiSelectFilter label="展业模式" options={businessModes} />
+        <MultiSelectFilter label="展业模式" options={businessModes} onChange={onBusinessModeChange} />
       )}
 
       {config.showMerchantOwner && (
-        <MerchantOwnerFilter role={role} onLevel1Change={onOwnerLevel1Change} />
+        <MerchantOwnerFilter role={role} module={module} onLevel1Change={onOwnerLevel1Change} />
       )}
 
       {config.showCardType && (
