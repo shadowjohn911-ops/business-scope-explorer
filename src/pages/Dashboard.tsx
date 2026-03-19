@@ -103,6 +103,7 @@ const Dashboard = () => {
 
             {activeModule === "organization" && roleType === "branch" && (
               <>
+                <CoreDataSummary module="organization" />
                 {ownerLevel1 !== "自有" && (
                   <>
                     <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} />
