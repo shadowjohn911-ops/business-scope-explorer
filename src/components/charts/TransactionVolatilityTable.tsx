@@ -81,7 +81,7 @@ const TransactionVolatilityTable = () => {
 
   const totalPages = Math.ceil(sortedDetails.length / PAGE_SIZE);
   const pagedDetails = sortedDetails.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const periodDays = detailPeriod.replace("天", "");
+  
 
   return (
     <>
@@ -151,9 +151,9 @@ const TransactionVolatilityTable = () => {
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">商户名称</th>
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">首刷日期</th>
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">末刷日期</th>
-                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天交易额(上期)</th>
+                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{detailPeriod}交易额(上期)</th>
                   <th className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground" onClick={() => handleSort("currentAmount")}>
-                    <span className="inline-flex items-center gap-0.5">{periodDays}天交易额(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
+                    <span className="inline-flex items-center gap-0.5">{detailPeriod}交易额(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
                   </th>
                   <th className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground" onClick={() => handleSort("volatility")}>
                     <span className="inline-flex items-center gap-0.5">波动比例 <ArrowUpDown className="w-2.5 h-2.5" /></span>
