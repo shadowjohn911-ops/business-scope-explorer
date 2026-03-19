@@ -41,15 +41,15 @@ const COLORS = [
 const OTHER_COLOR = "hsl(0, 0%, 20%)";
 
 const rawIndustryData = [
-  { name: "餐饮", value: 2850 },
-  { name: "零售", value: 2130 },
-  { name: "生活服务", value: 1560 },
-  { name: "教育培训", value: 980 },
-  { name: "医疗健康", value: 750 },
-  { name: "美容美发", value: 620 },
-  { name: "住宿", value: 510 },
-  { name: "汽车服务", value: 300 },
-  { name: "文体娱乐", value: 200 },
+  { name: "餐饮", value: 3200 },
+  { name: "零售", value: 2800 },
+  { name: "生活服务", value: 1200 },
+  { name: "教育培训", value: 800 },
+  { name: "医疗健康", value: 600 },
+  { name: "美容美发", value: 500 },
+  { name: "住宿", value: 400 },
+  { name: "汽车服务", value: 250 },
+  { name: "文体娱乐", value: 150 },
   { name: "家政服务", value: 100 },
 ];
 

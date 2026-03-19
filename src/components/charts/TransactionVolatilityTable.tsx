@@ -19,14 +19,18 @@ const bandRanges: Record<string, [number, number]> = {
 const nonZeroRate = () => { let r = 0; while (r === 0) r = Math.floor(Math.random() * 200) - 100; return r; };
 const PAGE_SIZE = 20;
 
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
-bands.forEach((band) => {
-  mockData[band] = {};
-  periods.forEach((p) => {
-    const base = band === "-50%~50%" ? 30 : 8;
-    mockData[band][p] = { value: Math.floor(Math.random() * base) + 1, rate: nonZeroRate() };
-  });
-});
+const nonZeroRate2 = () => { let r = 0; while (r === 0) r = Math.floor(Math.random() * 200) - 100; return r; };
+
+const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
+  "⬆500%以上":  { "昨日": { value: 3, rate: 50 },  "近7日": { value: 10, rate: 25 },  "近30日": { value: 18, rate: 20 },  "近90日": { value: 25, rate: 15 } },
+  "⬆200%~500%": { "昨日": { value: 5, rate: 30 },  "近7日": { value: 20, rate: 35 },  "近30日": { value: 30, rate: 28 },  "近90日": { value: 40, rate: 18 } },
+  "⬆100%~200%": { "昨日": { value: 8, rate: -15 }, "近7日": { value: 25, rate: -10 }, "近30日": { value: 35, rate: 12 },  "近90日": { value: 50, rate: 10 } },
+  "⬆50%~100%":  { "昨日": { value: 12, rate: 20 }, "近7日": { value: 35, rate: 15 },  "近30日": { value: 50, rate: -8 },  "近90日": { value: 65, rate: -5 } },
+  "-50%~50%":    { "昨日": { value: 250, rate: -3 },"近7日": { value: 700, rate: -5 }, "近30日": { value: 750, rate: 3 },   "近90日": { value: 780, rate: 5 } },
+  "⬇50%~75%":   { "昨日": { value: 6, rate: -20 }, "近7日": { value: 15, rate: -12 }, "近30日": { value: 22, rate: -18 },  "近90日": { value: 30, rate: -10 } },
+  "⬇75%~100%":  { "昨日": { value: 3, rate: -35 }, "近7日": { value: 5, rate: -25 },  "近30日": { value: 10, rate: -30 },  "近90日": { value: 15, rate: -20 } },
+  "⬇100%":      { "昨日": { value: 20, rate: 10 }, "近7日": { value: 60, rate: 8 },   "近30日": { value: 80, rate: -5 },   "近90日": { value: 90, rate: -3 } },
+};
 
 const getBandColor = (band: string) => { if (band.startsWith("⬆")) return "text-emerald-600"; if (band.startsWith("⬇")) return "text-red-500"; return "text-muted-foreground"; };
 const getBarColor = (band: string) => { if (band.startsWith("⬆")) return "hsl(160, 65%, 45%)"; if (band.startsWith("⬇")) return "hsl(0, 84%, 60%)"; return "hsl(215, 90%, 50%)"; };

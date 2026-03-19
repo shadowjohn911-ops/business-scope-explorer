@@ -8,29 +8,26 @@ const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const behaviors = ["入网", "首刷", "交易"] as const;
 const PAGE_SIZE = 20;
 
-const nonZeroRate = () => {
-  let r = 0;
-  while (r === 0) r = Math.floor(Math.random() * 201) - 100;
-  return r;
+const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
+  "入网": {
+    "昨日": { value: 22, rate: 50 },
+    "近7日": { value: 130, rate: 60 },
+    "近30日": { value: 420, rate: 35 },
+    "近90日": { value: 480, rate: 20 },
+  },
+  "首刷": {
+    "昨日": { value: 8, rate: -40 },
+    "近7日": { value: 50, rate: -60 },
+    "近30日": { value: 180, rate: -25 },
+    "近90日": { value: 350, rate: -15 },
+  },
+  "交易": {
+    "昨日": { value: 310, rate: -5 },
+    "近7日": { value: 730, rate: -10 },
+    "近30日": { value: 850, rate: 8 },
+    "近90日": { value: 920, rate: 12 },
+  },
 };
-
-const generateRow = () => {
-  const v90 = Math.floor(Math.random() * 489) + 11;
-  const v30 = Math.floor(Math.random() * (v90 - 11)) + 11;
-  const v7 = Math.floor(Math.random() * (v30 - 11)) + 11;
-  const v1 = Math.floor(Math.random() * (v7 - 11)) + 11;
-  return {
-    "昨日": { value: v1, rate: nonZeroRate() },
-    "近7日": { value: v7, rate: nonZeroRate() },
-    "近30日": { value: v30, rate: nonZeroRate() },
-    "近90日": { value: v90, rate: nonZeroRate() },
-  };
-};
-
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
-behaviors.forEach((b) => {
-  mockData[b] = generateRow();
-});
 
 const generateDetails = (count: number) =>
   Array.from({ length: count }, (_, i) => ({
