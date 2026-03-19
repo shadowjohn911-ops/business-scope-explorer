@@ -120,6 +120,7 @@ const Dashboard = () => {
 
             {activeModule === "organization" && roleType === "provider" && (
               <>
+                <CoreDataSummary module="organization" />
                 {ownerLevel1 !== "自有" && (
                   <>
                     <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} entityLabel="盟友" />
