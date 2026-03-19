@@ -16,6 +16,7 @@ import PartnerBehaviorTable from "@/components/charts/PartnerBehaviorTable";
 import PartnerIntakeVolatilityTable from "@/components/charts/PartnerIntakeVolatilityTable";
 import PartnerTransactionVolatilityTable from "@/components/charts/PartnerTransactionVolatilityTable";
 import PartnerDistributionChart from "@/components/charts/PartnerDistributionChart";
+import CoreDataSummary from "@/components/CoreDataSummary";
 
 type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
@@ -80,6 +81,7 @@ const Dashboard = () => {
           <div className="mt-4 space-y-3">
             {activeModule === "merchant" && (
               <>
+                <CoreDataSummary module="merchant" />
                 <MerchantBehaviorTable key={`mb-${filterKey}`} />
                 <ActiveMerchantChart key={`ac-${filterKey}`} />
                 <TransactionVolatilityTable key={`tv-${filterKey}`} />
@@ -88,6 +90,7 @@ const Dashboard = () => {
 
             {activeModule === "transaction" && (
               <>
+                <CoreDataSummary module="transaction" />
                 <TransactionInsightTable key={`ti-${filterKey}`} />
                 {roleType === "branch" && <ChannelCostTable key={`cc-${filterKey}`} />}
                 <TransactionDistributionChart
@@ -100,6 +103,7 @@ const Dashboard = () => {
 
             {activeModule === "organization" && roleType === "branch" && (
               <>
+                <CoreDataSummary module="organization" />
                 {ownerLevel1 !== "自有" && (
                   <>
                     <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} />
@@ -116,6 +120,7 @@ const Dashboard = () => {
 
             {activeModule === "organization" && roleType === "provider" && (
               <>
+                <CoreDataSummary module="organization" />
                 {ownerLevel1 !== "自有" && (
                   <>
                     <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} entityLabel="盟友" />
