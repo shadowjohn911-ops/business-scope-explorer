@@ -73,13 +73,6 @@ const summaryMap: Record<ModuleType, SummaryItem[]> = {
   organization: organizationSummary,
 };
 
-const getIndicator = (content: string) => {
-  if (content.includes("增长") && !content.includes("下降"))
-    return <TrendingUp className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />;
-  if (content.includes("下降") && !content.includes("增长"))
-    return <TrendingDown className="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" />;
-  return <Minus className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />;
-};
 
 interface Props {
   module: ModuleType;
