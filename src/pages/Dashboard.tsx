@@ -16,6 +16,7 @@ import PartnerBehaviorTable from "@/components/charts/PartnerBehaviorTable";
 import PartnerIntakeVolatilityTable from "@/components/charts/PartnerIntakeVolatilityTable";
 import PartnerTransactionVolatilityTable from "@/components/charts/PartnerTransactionVolatilityTable";
 import PartnerDistributionChart from "@/components/charts/PartnerDistributionChart";
+import CoreDataSummary from "@/components/CoreDataSummary";
 
 type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
