@@ -16,20 +16,20 @@ const bandRanges: Record<string, [number, number]> = {
   "⬇75%~100%": [-100, -75], "⬇100%": [-100, -100],
 };
 
-const nonZeroRate = () => { let r = 0; while (r === 0) r = Math.floor(Math.random() * 200) - 100; return r; };
 const PAGE_SIZE = 20;
 
-const nonZeroRate2 = () => { let r = 0; while (r === 0) r = Math.floor(Math.random() * 200) - 100; return r; };
-
+// Hardcoded data synchronized with MerchantBehaviorTable "交易" counts
+// Sum of all bands EXCLUDING ⬇100% must equal: 昨日310, 近7日730, 近30日850, 近90日920
+// ⬇100% (无交易) matches CoreDataSummary "无交易" values
 const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
-  "⬆500%以上":  { "昨日": { value: 3, rate: 50 },  "近7日": { value: 10, rate: 25 },  "近30日": { value: 18, rate: 20 },  "近90日": { value: 25, rate: 15 } },
-  "⬆200%~500%": { "昨日": { value: 5, rate: 30 },  "近7日": { value: 20, rate: 35 },  "近30日": { value: 30, rate: 28 },  "近90日": { value: 40, rate: 18 } },
-  "⬆100%~200%": { "昨日": { value: 8, rate: -15 }, "近7日": { value: 80, rate: -10 }, "近30日": { value: 35, rate: 12 },  "近90日": { value: 50, rate: 10 } },
-  "⬆50%~100%":  { "昨日": { value: 12, rate: 20 }, "近7日": { value: 150, rate: 15 }, "近30日": { value: 50, rate: -8 },  "近90日": { value: 65, rate: -5 } },
-  "-50%~50%":    { "昨日": { value: 250, rate: -3 },"近7日": { value: 220, rate: -5 }, "近30日": { value: 750, rate: 3 },   "近90日": { value: 780, rate: 5 } },
-  "⬇50%~75%":   { "昨日": { value: 6, rate: -20 }, "近7日": { value: 120, rate: -12 }, "近30日": { value: 22, rate: -18 }, "近90日": { value: 30, rate: -10 } },
-  "⬇75%~100%":  { "昨日": { value: 3, rate: -35 }, "近7日": { value: 130, rate: -25 }, "近30日": { value: 10, rate: -30 }, "近90日": { value: 15, rate: -20 } },
-  "⬇100%":      { "昨日": { value: 20, rate: 10 }, "近7日": { value: 60, rate: 8 },   "近30日": { value: 80, rate: -5 },   "近90日": { value: 90, rate: -3 } },
+  "⬆500%以上":  { "昨日": { value: 2, rate: 25 },   "近7日": { value: 10, rate: 25 },  "近30日": { value: 15, rate: 20 },  "近90日": { value: 20, rate: 15 } },
+  "⬆200%~500%": { "昨日": { value: 3, rate: 50 },   "近7日": { value: 20, rate: 35 },  "近30日": { value: 25, rate: 28 },  "近90日": { value: 35, rate: 18 } },
+  "⬆100%~200%": { "昨日": { value: 5, rate: -15 },  "近7日": { value: 80, rate: -10 }, "近30日": { value: 40, rate: 12 },  "近90日": { value: 55, rate: 10 } },
+  "⬆50%~100%":  { "昨日": { value: 8, rate: 20 },   "近7日": { value: 150, rate: 15 }, "近30日": { value: 60, rate: -8 },  "近90日": { value: 70, rate: -5 } },
+  "-50%~50%":    { "昨日": { value: 180, rate: -3 }, "近7日": { value: 220, rate: -5 }, "近30日": { value: 350, rate: 3 },  "近90日": { value: 480, rate: 5 } },
+  "⬇50%~75%":   { "昨日": { value: 60, rate: -20 }, "近7日": { value: 120, rate: -12 }, "近30日": { value: 200, rate: -18 }, "近90日": { value: 150, rate: -10 } },
+  "⬇75%~100%":  { "昨日": { value: 52, rate: -35 }, "近7日": { value: 130, rate: -25 }, "近30日": { value: 160, rate: -30 }, "近90日": { value: 110, rate: -20 } },
+  "⬇100%":      { "昨日": { value: 20, rate: 10 },  "近7日": { value: 60, rate: 8 },   "近30日": { value: 95, rate: -5 },  "近90日": { value: 120, rate: -3 } },
 };
 
 const getBandColor = (band: string) => { if (band.startsWith("⬆")) return "text-emerald-600"; if (band.startsWith("⬇")) return "text-red-500"; return "text-muted-foreground"; };
@@ -85,7 +85,6 @@ const TransactionVolatilityTable = () => {
 
   const totalPages = Math.ceil(sortedDetails.length / PAGE_SIZE);
   const pagedDetails = sortedDetails.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  
 
   return (
     <>

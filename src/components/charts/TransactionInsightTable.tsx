@@ -5,29 +5,39 @@ import { HelpCircle } from "lucide-react";
 const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const metrics = ["交易金额", "交易笔数", "笔均金额", "台均金额", "户均金额"] as const;
 
-const nonZeroRate = () => {
-  let r = 0;
-  while (r === 0) r = Math.floor(Math.random() * 201) - 100;
-  return r;
+// Hardcoded data synchronized with CoreDataSummary transaction module
+const mockData: Record<string, Record<string, { value: number | string; rate: number }>> = {
+  "交易金额": {
+    "昨日": { value: "120万", rate: 5 },
+    "近7日": { value: "850万", rate: 12 },
+    "近30日": { value: "3200万", rate: 15 },
+    "近90日": { value: "9500万", rate: 18 },
+  },
+  "交易笔数": {
+    "昨日": { value: "1800", rate: 3 },
+    "近7日": { value: "1.2万", rate: 8 },
+    "近30日": { value: "4.5万", rate: 10 },
+    "近90日": { value: "13万", rate: 12 },
+  },
+  "笔均金额": {
+    "昨日": { value: "667", rate: 2 },
+    "近7日": { value: "708", rate: 4 },
+    "近30日": { value: "711", rate: 5 },
+    "近90日": { value: "731", rate: 5 },
+  },
+  "台均金额": {
+    "昨日": { value: "480", rate: 3 },
+    "近7日": { value: "2800", rate: 6 },
+    "近30日": { value: "8500", rate: 8 },
+    "近90日": { value: "2.2万", rate: 10 },
+  },
+  "户均金额": {
+    "昨日": { value: "350", rate: 8 },
+    "近7日": { value: "2400", rate: 15 },
+    "近30日": { value: "8500", rate: 18 },
+    "近90日": { value: "2.4万", rate: 22 },
+  },
 };
-
-const generateRow = () => {
-  const v90 = Math.floor(Math.random() * 489) + 11;
-  const v30 = Math.floor(Math.random() * (v90 - 11)) + 11;
-  const v7 = Math.floor(Math.random() * (v30 - 11)) + 11;
-  const v1 = Math.floor(Math.random() * (v7 - 11)) + 11;
-  return {
-    "昨日": { value: v1, rate: nonZeroRate() },
-    "近7日": { value: v7, rate: nonZeroRate() },
-    "近30日": { value: v30, rate: nonZeroRate() },
-    "近90日": { value: v90, rate: nonZeroRate() },
-  };
-};
-
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
-metrics.forEach((m) => {
-  mockData[m] = generateRow();
-});
 
 const TransactionInsightTable = () => {
   return (

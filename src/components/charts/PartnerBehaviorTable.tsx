@@ -8,18 +8,27 @@ const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const behaviors = ["入网", "首次进件", "活跃"] as const;
 const PAGE_SIZE = 20;
 
-const nonZeroRate = () => { let r = 0; while (r === 0) r = Math.floor(Math.random() * 201) - 100; return r; };
-
-const generateRow = () => {
-  const v90 = Math.floor(Math.random() * 489) + 11;
-  const v30 = Math.floor(Math.random() * (v90 - 11)) + 11;
-  const v7 = Math.floor(Math.random() * (v30 - 11)) + 11;
-  const v1 = Math.floor(Math.random() * (v7 - 11)) + 11;
-  return { "昨日": { value: v1, rate: nonZeroRate() }, "近7日": { value: v7, rate: nonZeroRate() }, "近30日": { value: v30, rate: nonZeroRate() }, "近90日": { value: v90, rate: nonZeroRate() } };
+// Hardcoded data synchronized with CoreDataSummary organization module
+const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
+  "入网": {
+    "昨日": { value: 4, rate: 15 },
+    "近7日": { value: 25, rate: 30 },
+    "近30日": { value: 65, rate: 25 },
+    "近90日": { value: 180, rate: 20 },
+  },
+  "首次进件": {
+    "昨日": { value: 3, rate: 10 },
+    "近7日": { value: 18, rate: 25 },
+    "近30日": { value: 48, rate: 20 },
+    "近90日": { value: 130, rate: 15 },
+  },
+  "活跃": {
+    "昨日": { value: 80, rate: -2 },
+    "近7日": { value: 85, rate: -5 },
+    "近30日": { value: 92, rate: -3 },
+    "近90日": { value: 98, rate: -4 },
+  },
 };
-
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
-behaviors.forEach((b) => { mockData[b] = generateRow(); });
 
 const generateDetails = (count: number) =>
   Array.from({ length: count }, (_, i) => ({

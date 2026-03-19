@@ -3,48 +3,36 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { HelpCircle } from "lucide-react";
 
 const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
-const costTypes = ["交换费", "清算费"] as const;
-
-const nonZeroRate = () => {
-  let r = 0;
-  while (r === 0) r = Math.floor(Math.random() * 201) - 100;
-  return r;
-};
-
-const generateRow = () => {
-  const v90 = Math.floor(Math.random() * 489) + 11;
-  const v30 = Math.floor(Math.random() * (v90 - 11)) + 11;
-  const v7 = Math.floor(Math.random() * (v30 - 11)) + 11;
-  const v1 = Math.floor(Math.random() * (v7 - 11)) + 11;
-  return {
-    "昨日": { value: v1, rate: nonZeroRate() },
-    "近7日": { value: v7, rate: nonZeroRate() },
-    "近30日": { value: v30, rate: nonZeroRate() },
-    "近90日": { value: v90, rate: nonZeroRate() },
-  };
-};
-
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
-costTypes.forEach((c) => {
-  mockData[c] = generateRow();
-});
-
-// 总计 = 交换费 + 清算费
-const totalRow: Record<string, { value: number; rate: number }> = {};
-periods.forEach((p) => {
-  const sumVal = mockData["交换费"][p].value + mockData["清算费"][p].value;
-  totalRow[p] = { value: sumVal, rate: nonZeroRate() };
-});
-mockData["总计"] = totalRow;
-
 const allCostTypes = ["交换费", "清算费", "总计"] as const;
+
+// Hardcoded data synchronized with CoreDataSummary transaction module
+const mockData: Record<string, Record<string, { value: string; rate: number }>> = {
+  "交换费": {
+    "昨日": { value: "0.43", rate: 3 },
+    "近7日": { value: "3.02", rate: 5 },
+    "近30日": { value: "11.22", rate: 8 },
+    "近90日": { value: "32.55", rate: 10 },
+  },
+  "清算费": {
+    "昨日": { value: "0.17", rate: 5 },
+    "近7日": { value: "1.18", rate: 8 },
+    "近30日": { value: "4.58", rate: 10 },
+    "近90日": { value: "13.95", rate: 12 },
+  },
+  "总计": {
+    "昨日": { value: "0.60", rate: 4 },
+    "近7日": { value: "4.20", rate: 6 },
+    "近30日": { value: "15.80", rate: 9 },
+    "近90日": { value: "46.50", rate: 11 },
+  },
+};
 
 const ChannelCostTable = () => {
   return (
     <Card className="border-border">
       <CardHeader className="px-3 py-2.5 pb-0">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xs font-semibold text-foreground">通道成本</CardTitle>
+          <CardTitle className="text-xs font-semibold text-foreground">通道成本（万元）</CardTitle>
           <Popover>
             <PopoverTrigger asChild>
               <button className="p-0.5 rounded-full hover:bg-muted transition-colors">
@@ -52,7 +40,7 @@ const ChannelCostTable = () => {
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-72 text-[11px] leading-relaxed text-foreground" side="left" align="start">
-              表格中的数值表示在指定回溯周期内（如近7日、近30日）各类成本的统计值；百分比表示当前周期相较于上一周期的环比变化率（正数表示增长，负数表示下降）。
+              表格中的数值表示在指定回溯周期内（如近7日、近30日）各类成本的统计值（单位：万元）；百分比表示当前周期相较于上一周期的环比变化率（正数表示增长，负数表示下降）。
             </PopoverContent>
           </Popover>
         </div>
