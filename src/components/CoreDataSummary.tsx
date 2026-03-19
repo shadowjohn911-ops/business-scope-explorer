@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, TrendingDown, Minus } from "lucide-react";
+
 
 type ModuleType = "merchant" | "transaction" | "organization";
 
@@ -12,7 +12,7 @@ const merchantSummary: SummaryItem[] = [
   {
     title: "入网与首刷",
     content:
-      "近7日入网商户130家，环比增长60%；首刷50家，环比下降60%；首刷率38.5%，新商户激活效率堪忧。",
+      "近7日入网商户130家，环比增长60%；首刷50家，环比下降60%；首刷率38.5%，新商户交易转化率偏低。",
   },
   {
     title: "交易活跃度",
@@ -73,13 +73,6 @@ const summaryMap: Record<ModuleType, SummaryItem[]> = {
   organization: organizationSummary,
 };
 
-const getIndicator = (content: string) => {
-  if (content.includes("增长") && !content.includes("下降"))
-    return <TrendingUp className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />;
-  if (content.includes("下降") && !content.includes("增长"))
-    return <TrendingDown className="w-3.5 h-3.5 text-red-500 shrink-0 mt-0.5" />;
-  return <Minus className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />;
-};
 
 interface Props {
   module: ModuleType;
@@ -96,12 +89,9 @@ const CoreDataSummary = ({ module }: Props) => {
       <CardContent className="px-3 py-2.5">
         <div className="space-y-2.5">
           {items.map((item, idx) => (
-            <div key={idx} className="flex gap-2">
-              {getIndicator(item.content)}
-              <div className="min-w-0">
-                <span className="text-[11px] font-semibold text-foreground">{item.title}：</span>
-                <span className="text-[11px] text-muted-foreground leading-relaxed">{item.content}</span>
-              </div>
+            <div key={idx} className="min-w-0">
+              <span className="text-[11px] font-semibold text-foreground">{item.title}：</span>
+              <span className="text-[11px] text-muted-foreground leading-relaxed">{item.content}</span>
             </div>
           ))}
         </div>
