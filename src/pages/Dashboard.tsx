@@ -81,6 +81,7 @@ const Dashboard = () => {
           <div className="mt-4 space-y-3">
             {activeModule === "merchant" && (
               <>
+                <CoreDataSummary module="merchant" />
                 <MerchantBehaviorTable key={`mb-${filterKey}`} />
                 <ActiveMerchantChart key={`ac-${filterKey}`} />
                 <TransactionVolatilityTable key={`tv-${filterKey}`} />
