@@ -8,6 +8,7 @@ const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const behaviors = ["入网", "首刷", "交易"] as const;
 const PAGE_SIZE = 20;
 
+// Hardcoded data synchronized with CoreDataSummary merchant module
 const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
   "入网": {
     "昨日": { value: 22, rate: 50 },

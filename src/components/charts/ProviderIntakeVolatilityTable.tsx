@@ -10,11 +10,19 @@ const bandRanges: Record<string, [number, number]> = {
   "⬆200%以上": [200, 1000], "⬆100%~200%": [100, 200], "⬆50%~100%": [50, 100],
   "-50%~50%": [-50, 50], "⬇50%~75%": [-75, -50], "⬇75%~100%": [-100, -75], "⬇100%": [-100, -100],
 };
-const nonZeroRate = () => { let r = 0; while (r === 0) r = Math.floor(Math.random() * 200) - 100; return r; };
 const PAGE_SIZE = 20;
 
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};
-bands.forEach((band) => { mockData[band] = {}; periods.forEach((p) => { const base = band === "-50%~50%" ? 30 : 8; mockData[band][p] = { value: Math.floor(Math.random() * base) + 1, rate: nonZeroRate() }; }); });
+// Hardcoded data synchronized with CoreDataSummary organization module
+// ⬆200%以上 must match "进件波动超200%的服务商" counts: 昨日3, 近7日15, 近30日28, 近90日42
+const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
+  "⬆200%以上":  { "昨日": { value: 3, rate: 25 },  "近7日": { value: 15, rate: 30 },  "近30日": { value: 28, rate: 20 },  "近90日": { value: 42, rate: 15 } },
+  "⬆100%~200%": { "昨日": { value: 2, rate: 15 },  "近7日": { value: 8, rate: -10 },  "近30日": { value: 15, rate: 12 },  "近90日": { value: 22, rate: 10 } },
+  "⬆50%~100%":  { "昨日": { value: 4, rate: -10 }, "近7日": { value: 12, rate: 15 },  "近30日": { value: 18, rate: -8 },  "近90日": { value: 25, rate: -5 } },
+  "-50%~50%":    { "昨日": { value: 18, rate: -3 }, "近7日": { value: 25, rate: -5 },  "近30日": { value: 30, rate: 3 },   "近90日": { value: 35, rate: 5 } },
+  "⬇50%~75%":   { "昨日": { value: 2, rate: -20 }, "近7日": { value: 5, rate: -15 },  "近30日": { value: 8, rate: -18 },  "近90日": { value: 12, rate: -10 } },
+  "⬇75%~100%":  { "昨日": { value: 1, rate: -30 }, "近7日": { value: 3, rate: -25 },  "近30日": { value: 5, rate: -28 },  "近90日": { value: 8, rate: -20 } },
+  "⬇100%":      { "昨日": { value: 3, rate: 10 },  "近7日": { value: 6, rate: 8 },    "近30日": { value: 10, rate: -5 },  "近90日": { value: 15, rate: -3 } },
+};
 
 const getBandColor = (band: string) => { if (band.startsWith("⬆")) return "text-emerald-600"; if (band.startsWith("⬇")) return "text-red-500"; return "text-muted-foreground"; };
 const getBarColor = (band: string) => { if (band.startsWith("⬆")) return "hsl(160, 65%, 45%)"; if (band.startsWith("⬇")) return "hsl(0, 84%, 60%)"; return "hsl(215, 90%, 50%)"; };
@@ -60,7 +68,6 @@ const ProviderIntakeVolatilityTable = ({ entityLabel = "服务商" }: Props) => 
   const sortedDetails = [...details].sort((a, b) => { const diff = a[sortField] - b[sortField]; return sortAsc ? diff : -diff; });
   const totalPages = Math.ceil(sortedDetails.length / PAGE_SIZE);
   const pagedDetails = sortedDetails.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  
 
   return (
     <>
