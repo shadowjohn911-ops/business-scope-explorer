@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "recharts";
 
-const periodsOptions = ["1天", "7天", "30天", "90天"] as const;
+const periodsOptions = ["昨日", "近7日", "近30日", "近90日"] as const;
 type DimensionType = "industry" | "cardType" | "product";
 
 const COLORS = [
@@ -25,10 +25,10 @@ const RADIAN = Math.PI / 180;
 
 // Period multipliers to simulate data variation across periods
 const periodMultipliers: Record<string, number> = {
-  "1天": 0.035,
-  "7天": 0.22,
-  "30天": 1,
-  "90天": 2.8,
+  "昨日": 0.035,
+  "近7日": 0.22,
+  "近30日": 1,
+  "近90日": 2.8,
 };
 
 const industryBase = [
@@ -63,7 +63,7 @@ const applyPeriod = (raw: { name: string; value: number }[], period: string) => 
   const mult = periodMultipliers[period] ?? 1;
   return raw.map((item, i) => ({
     ...item,
-    value: Math.round(item.value * mult * (1 + (i % 3 === 0 ? 0.08 : i % 3 === 1 ? -0.05 : 0.02) * (period === "30天" ? 0 : 1))),
+    value: Math.round(item.value * mult * (1 + (i % 3 === 0 ? 0.08 : i % 3 === 1 ? -0.05 : 0.02) * (period === "近30日" ? 0 : 1))),
   }));
 };
 
@@ -147,7 +147,7 @@ interface Props {
 }
 
 const TransactionDistributionChart = ({ selectedCardTypes, selectedProducts }: Props) => {
-  const [period, setPeriod] = useState<string>("30天");
+  const [period, setPeriod] = useState<string>("近30日");
   const [dimension, setDimension] = useState<DimensionType>("industry");
 
   const { data, total } = useMemo(() => {

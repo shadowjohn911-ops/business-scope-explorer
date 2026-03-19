@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { HelpCircle, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-const periods = ["1天", "7天", "30天", "90天"] as const;
+const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const bands = [
   "⬆500%以上", "⬆200%~500%", "⬆100%~200%", "⬆50%~100%",
   "-50%~50%", "⬇50%~75%", "⬇75%~100%", "⬇100%",
@@ -50,10 +50,10 @@ const generateDetails = (band: string, count: number) => {
 type DetailSortField = "currentAmount" | "volatility";
 
 const TransactionVolatilityTable = () => {
-  const [activePeriod, setActivePeriod] = useState<string>("7天");
+  const [activePeriod, setActivePeriod] = useState<string>("近7日");
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailTitle, setDetailTitle] = useState("");
-  const [detailPeriod, setDetailPeriod] = useState("7天");
+  const [detailPeriod, setDetailPeriod] = useState("近7日");
   const [details, setDetails] = useState<ReturnType<typeof generateDetails>>([]);
   const [sortField, setSortField] = useState<DetailSortField>("currentAmount");
   const [sortAsc, setSortAsc] = useState(false);
@@ -81,7 +81,7 @@ const TransactionVolatilityTable = () => {
 
   const totalPages = Math.ceil(sortedDetails.length / PAGE_SIZE);
   const pagedDetails = sortedDetails.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const periodDays = detailPeriod.replace("天", "");
+  
 
   return (
     <>
@@ -103,7 +103,7 @@ const TransactionVolatilityTable = () => {
                   表格中的数值表示在指定回溯周期内（如近7日），交易额较上一周期波动幅度落在该区间的商户数量；百分比表示该区间商户数量相较于上一周期的环比变化率（正数表示增加，负数表示减少）。
                   <br /><br />
                   <span className="text-muted-foreground">
-                    示例：若"⬆500%以上"对应"7天"的数值为3，比例为+200%，则表示当前周期（如3/10-3/16）内有3个商户的交易额较上一周期（如3/3-3/9）增长超过5倍，且这类商户的数量较上一周期增加了2倍（即从1个增至3个）。
+                    示例：若"⬆500%以上"对应"近7日"的数值为3，比例为+200%，则表示当前周期（如3/10-3/16）内有3个商户的交易额较上一周期（如3/3-3/9）增长超过5倍，且这类商户的数量较上一周期增加了2倍（即从1个增至3个）。
                   </span>
                 </PopoverContent>
               </Popover>
@@ -151,9 +151,9 @@ const TransactionVolatilityTable = () => {
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">商户名称</th>
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">首刷日期</th>
                   <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">末刷日期</th>
-                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天交易额(上期)</th>
+                  <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{detailPeriod}交易额(上期)</th>
                   <th className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground" onClick={() => handleSort("currentAmount")}>
-                    <span className="inline-flex items-center gap-0.5">{periodDays}天交易额(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
+                    <span className="inline-flex items-center gap-0.5">{detailPeriod}交易额(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
                   </th>
                   <th className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground" onClick={() => handleSort("volatility")}>
                     <span className="inline-flex items-center gap-0.5">波动比例 <ArrowUpDown className="w-2.5 h-2.5" /></span>

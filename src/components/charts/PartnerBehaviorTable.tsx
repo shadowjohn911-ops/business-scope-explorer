@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { HelpCircle, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-const periods = ["1天", "7天", "30天", "90天"] as const;
+const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const behaviors = ["入网", "首次进件", "活跃"] as const;
 const PAGE_SIZE = 20;
 
@@ -15,7 +15,7 @@ const generateRow = () => {
   const v30 = Math.floor(Math.random() * (v90 - 11)) + 11;
   const v7 = Math.floor(Math.random() * (v30 - 11)) + 11;
   const v1 = Math.floor(Math.random() * (v7 - 11)) + 11;
-  return { "1天": { value: v1, rate: nonZeroRate() }, "7天": { value: v7, rate: nonZeroRate() }, "30天": { value: v30, rate: nonZeroRate() }, "90天": { value: v90, rate: nonZeroRate() } };
+  return { "昨日": { value: v1, rate: nonZeroRate() }, "近7日": { value: v7, rate: nonZeroRate() }, "近30日": { value: v30, rate: nonZeroRate() }, "近90日": { value: v90, rate: nonZeroRate() } };
 };
 
 const mockData: Record<string, Record<string, { value: number; rate: number }>> = {};

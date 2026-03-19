@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { HelpCircle } from "lucide-react";
 
-const periods = ["1天", "7天", "30天", "90天"] as const;
+const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const metrics = ["交易金额", "交易笔数", "笔均金额", "台均金额", "户均金额"] as const;
 
 const nonZeroRate = () => {
@@ -17,10 +17,10 @@ const generateRow = () => {
   const v7 = Math.floor(Math.random() * (v30 - 11)) + 11;
   const v1 = Math.floor(Math.random() * (v7 - 11)) + 11;
   return {
-    "1天": { value: v1, rate: nonZeroRate() },
-    "7天": { value: v7, rate: nonZeroRate() },
-    "30天": { value: v30, rate: nonZeroRate() },
-    "90天": { value: v90, rate: nonZeroRate() },
+    "昨日": { value: v1, rate: nonZeroRate() },
+    "近7日": { value: v7, rate: nonZeroRate() },
+    "近30日": { value: v30, rate: nonZeroRate() },
+    "近90日": { value: v90, rate: nonZeroRate() },
   };
 };
 

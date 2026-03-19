@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { HelpCircle, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-const periods = ["1天", "7天", "30天", "90天"] as const;
+const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const bands = ["⬆200%以上", "⬆100%~200%", "⬆50%~100%", "-50%~50%", "⬇50%~75%", "⬇75%~100%", "⬇100%"] as const;
 const bandRanges: Record<string, [number, number]> = {
   "⬆200%以上": [200, 1000], "⬆100%~200%": [100, 200], "⬆50%~100%": [50, 100],
@@ -39,10 +39,10 @@ type DetailSortField = "currentAmount" | "volatility";
 interface Props { disableDetails?: boolean; }
 
 const PartnerTransactionVolatilityTable = ({ disableDetails = false }: Props) => {
-  const [activePeriod, setActivePeriod] = useState<string>("7天");
+  const [activePeriod, setActivePeriod] = useState<string>("近7日");
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailTitle, setDetailTitle] = useState("");
-  const [detailPeriod, setDetailPeriod] = useState("7天");
+  const [detailPeriod, setDetailPeriod] = useState("近7日");
   const [details, setDetails] = useState<ReturnType<typeof generateDetails>>([]);
   const [sortField, setSortField] = useState<DetailSortField>("currentAmount");
   const [sortAsc, setSortAsc] = useState(false);
@@ -66,7 +66,7 @@ const PartnerTransactionVolatilityTable = ({ disableDetails = false }: Props) =>
   const sortedDetails = [...details].sort((a, b) => { const diff = a[sortField] - b[sortField]; return sortAsc ? diff : -diff; });
   const totalPages = Math.ceil(sortedDetails.length / PAGE_SIZE);
   const pagedDetails = sortedDetails.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  const periodDays = detailPeriod.replace("天", "");
+  
 
   return (
     <>
@@ -82,7 +82,7 @@ const PartnerTransactionVolatilityTable = ({ disableDetails = false }: Props) =>
                 <PopoverTrigger asChild><button className="p-0.5 rounded-full hover:bg-muted transition-colors"><HelpCircle className="w-3.5 h-3.5 text-muted-foreground" /></button></PopoverTrigger>
                 <PopoverContent className="w-80 text-[11px] leading-relaxed text-foreground" side="left" align="start">
                   表格中的数值表示在指定回溯周期内（如近7日），交易额较上一周期增长率落在该区间的合作方数量；百分比表示该区间合作方数量相较于上一周期的环比变化率（正数表示增加，负数表示减少）。
-                  <br /><br /><span className="text-muted-foreground">示例：若"⬆200%以上"对应"7天"的数值为5，比例为+25%，则表示当前周期（如3/10-3/16）内有5个合作方的交易额较上一周期（如3/3-3/9）增长超过2倍，且这类合作方的数量较上一周期增加了25%。</span>
+                  <br /><br /><span className="text-muted-foreground">示例：若"⬆200%以上"对应"近7日"的数值为5，比例为+25%，则表示当前周期（如3/10-3/16）内有5个合作方的交易额较上一周期（如3/3-3/9）增长超过2倍，且这类合作方的数量较上一周期增加了25%。</span>
                 </PopoverContent>
               </Popover>
             </div>
@@ -128,9 +128,9 @@ const PartnerTransactionVolatilityTable = ({ disableDetails = false }: Props) =>
                     <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">合作方名称</th>
                     <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">服务商编号</th>
                     <th className="text-left py-1.5 px-1 font-medium text-muted-foreground">服务商名称</th>
-                    <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{periodDays}天交易额(上期)</th>
+                    <th className="text-right py-1.5 px-1 font-medium text-muted-foreground">{detailPeriod}交易额(上期)</th>
                     <th className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground" onClick={() => handleSort("currentAmount")}>
-                      <span className="inline-flex items-center gap-0.5">{periodDays}天交易额(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
+                      <span className="inline-flex items-center gap-0.5">{detailPeriod}交易额(本期) <ArrowUpDown className="w-2.5 h-2.5" /></span>
                     </th>
                     <th className="text-right py-1.5 px-1 font-medium text-muted-foreground cursor-pointer hover:text-foreground" onClick={() => handleSort("volatility")}>
                       <span className="inline-flex items-center gap-0.5">交易额波动比例 <ArrowUpDown className="w-2.5 h-2.5" /></span>
