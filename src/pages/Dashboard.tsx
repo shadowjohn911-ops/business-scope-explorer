@@ -85,7 +85,7 @@ const Dashboard = () => {
           <div className="mt-4 space-y-3">
             {activeModule === "merchant" && (
               <>
-                <CoreDataSummary module="merchant" period={activePeriod} onPeriodChange={setActivePeriod} />
+                <CoreDataSummary module="merchant" period={activePeriod} onPeriodChange={setActivePeriod} role={roleType} />
                 <MerchantBehaviorTable key={`mb-${filterKey}`} />
                 <TransactionVolatilityTable key={`tv-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
                 <ActiveMerchantChart key={`ac-${filterKey}`} />
