@@ -52,7 +52,7 @@ function generateTransactionSummary(period: PeriodType, role: RoleType): Summary
   const costClearing = channelCostData["清算费"][period];
   const rates = channelCostRates[period];
   const costDir = costTotal.rate > 0 ? "增长" : "下降";
-  const costSummary = `通道总成本${costTotal.value}万元，其中交换费${costInterchange.value}万元（费率${rates.interchangeRate}%），清算费${costClearing.value}万元（费率${rates.clearingRate}%），环比${costDir}${Math.abs(costTotal.rate).toFixed(1)}%；成本结构合理。`;
+  const costSummary = `通道总成本${costTotal.value}万元，其中交换费${costInterchange.value}万元（费率${rates.interchangeRate}%），清算费${costClearing.value}万元（费率${rates.clearingRate}%），通道成本率在合理区间范围。`;
 
   // --- 行业结构 (period-adjusted) ---
   const industryData = applyPeriod(industryBase, period);
