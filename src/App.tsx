@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import RoleSelect from "./pages/RoleSelect";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import Watermark from "./components/Watermark";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <Watermark />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<RoleSelect />} />
