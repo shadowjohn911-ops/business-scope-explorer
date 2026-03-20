@@ -83,13 +83,18 @@ function generateTransactionSummary(period: PeriodType, role: RoleType): Summary
   const prodParts = prodSorted.map(p => `${p.name}${((p.value / prodTotal) * 100).toFixed(0)}%`);
   const productSummary = `${prodParts.join("、")}。`;
 
-  return [
+  const result: SummaryItem[] = [
     { title: "交易规模", content: scaleSummary },
-    { title: "通道成本", content: costSummary },
+  ];
+  if (role === "branch") {
+    result.push({ title: "通道成本", content: costSummary });
+  }
+  result.push(
     { title: "行业结构", content: industrySummary },
     { title: "卡种偏好", content: cardSummary },
     { title: "产品分布", content: productSummary },
-  ];
+  );
+  return result;
 }
 
 const organizationSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
