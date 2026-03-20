@@ -100,15 +100,15 @@ const CoreDataSummary = ({ module, period, onPeriodChange }: Props) => {
       <CardHeader className="px-3 py-2.5 pb-0">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xs font-semibold text-foreground">核心数据摘要</CardTitle>
-          <div className="flex gap-1">
+          <div className="flex bg-muted rounded-md p-0.5">
             {periods.map((p) => (
               <button
                 key={p}
                 onClick={() => onPeriodChange(p)}
-                className={`px-2 py-0.5 rounded text-[10px] font-medium transition-colors ${
+                className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${
                   period === p
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-accent"
+                    ? "bg-card text-foreground shadow-sm"
+                    : "text-muted-foreground"
                 }`}
               >
                 {p}
