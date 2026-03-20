@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type ModuleType = "merchant" | "transaction" | "organization";
@@ -11,28 +10,25 @@ interface SummaryItem {
 
 const merchantSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
   "昨日": [
-    { title: "入网与首刷", content: "入网商户22家，环比增长50%；首刷8家，环比下降40%；首刷率36.4%，新商户交易转化率偏低。" },
-    { title: "交易活跃度", content: "有交易行为的商户310家，环比下降5%，存量商户活跃度下滑。" },
+    { title: "入网与首刷（即首次交易）", content: "入网商户22户（门店24家），环比增长50%；首刷8户（门店9家），环比下降40%；首刷率36.4%，新商户交易转化率偏低。" },
+    { title: "交易活跃度", content: "共有商户500户，有交易行为的商户310户，环比下降5%，存量商户活跃度下滑。" },
     { title: "商户特征", content: "商户存活天数中位数130天，80%商户集中在30天至200天之间；行业分布以餐饮、零售为主，合计占比60%。" },
-    { title: "交易额波动", content: "交易额增长超200%的商户5户，波动±50%以内的180户，无交易20户，需关注极端高增长商户的潜力挖掘与无交易商户的流失风险。" },
+    { title: "交易额波动", content: "交易额增长超200%的商户5户，波动±50%以内的180户，无交易20户，需关注高增长商户的潜力挖掘与无交易商户的流失风险。" },
   ],
   "近7日": [
-    { title: "入网与首刷", content: "入网商户130家，环比增长60%；首刷50家，环比下降60%；首刷率38.5%，新商户交易转化率偏低。" },
-    { title: "交易活跃度", content: "有交易行为的商户730家，环比下降10%，存量商户活跃度下滑。" },
-    { title: "商户特征", content: "商户存活天数中位数130天，80%商户集中在30天至200天之间；行业分布以餐饮、零售为主，合计占比60%。" },
-    { title: "交易额波动", content: "交易额增长超200%的商户30户，波动±50%以内的220户，无交易60户，需关注极端高增长商户的潜力挖掘与无交易商户的流失风险。" },
+    { title: "入网与首刷（即首次交易）", content: "入网商户130户（门店150家），环比增长60%；首刷50户（门店57家），环比下降60%；首刷率38.5%，新商户交易转化率偏低。" },
+    { title: "交易活跃度", content: "共有商户1200户，有交易行为的商户730户，环比下降10%，存量商户活跃度下滑。" },
+    { title: "交易额波动", content: "交易额增长超200%的商户30户，波动±50%以内的220户，无交易60户，需关注高增长商户的潜力挖掘与无交易商户的流失风险。" },
   ],
   "近30日": [
-    { title: "入网与首刷", content: "入网商户420家，环比增长35%；首刷180家，环比下降25%；首刷率42.9%，新商户交易转化率偏低。" },
-    { title: "交易活跃度", content: "有交易行为的商户850家，环比增长8%，存量商户活跃度回升。" },
-    { title: "商户特征", content: "商户存活天数中位数130天，80%商户集中在30天至200天之间；行业分布以餐饮、零售为主，合计占比60%。" },
-    { title: "交易额波动", content: "交易额增长超200%的商户40户，波动±50%以内的350户，无交易95户，需关注极端高增长商户的潜力挖掘与无交易商户的流失风险。" },
+    { title: "入网与首刷（即首次交易）", content: "入网商户420户（门店480家），环比增长35%；首刷180户（门店210家），环比下降25%；首刷率42.9%，新商户交易转化率偏低。" },
+    { title: "交易活跃度", content: "共有商户1500户，有交易行为的商户850户，环比增长8%，存量商户活跃度回升。" },
+    { title: "交易额波动", content: "交易额增长超200%的商户40户，波动±50%以内的350户，无交易95户，需关注高增长商户的潜力挖掘与无交易商户的流失风险。" },
   ],
   "近90日": [
-    { title: "入网与首刷", content: "入网商户480家，环比增长20%；首刷350家，环比下降15%；首刷率72.9%，新商户交易转化率较高。" },
-    { title: "交易活跃度", content: "有交易行为的商户920家，环比增长12%，存量商户活跃度持续提升。" },
-    { title: "商户特征", content: "商户存活天数中位数130天，80%商户集中在30天至200天之间；行业分布以餐饮、零售为主，合计占比60%。" },
-    { title: "交易额波动", content: "交易额增长超200%的商户55户，波动±50%以内的480户，无交易120户，需关注极端高增长商户的潜力挖掘与无交易商户的流失风险。" },
+    { title: "入网与首刷（即首次交易）", content: "入网商户480户（门店550家），环比增长20%；首刷350户（门店400家），环比下降15%；首刷率72.9%，新商户交易转化率较高。" },
+    { title: "交易活跃度", content: "共有商户1800户，有交易行为的商户920户，环比增长12%，存量商户活跃度持续提升。" },
+    { title: "交易额波动", content: "交易额增长超200%的商户55户，波动±50%以内的480户，无交易120户，需关注高增长商户的潜力挖掘与无交易商户的流失风险。" },
   ],
 };
 
@@ -92,11 +88,12 @@ const periods: PeriodType[] = ["昨日", "近7日", "近30日", "近90日"];
 
 interface Props {
   module: ModuleType;
+  period: PeriodType;
+  onPeriodChange: (p: PeriodType) => void;
 }
 
-const CoreDataSummary = ({ module }: Props) => {
-  const [activePeriod, setActivePeriod] = useState<PeriodType>("近7日");
-  const items = summaryByPeriodMap[module][activePeriod];
+const CoreDataSummary = ({ module, period, onPeriodChange }: Props) => {
+  const items = summaryByPeriodMap[module][period];
 
   return (
     <Card className="border-border">
@@ -107,9 +104,9 @@ const CoreDataSummary = ({ module }: Props) => {
             {periods.map((p) => (
               <button
                 key={p}
-                onClick={() => setActivePeriod(p)}
+                onClick={() => onPeriodChange(p)}
                 className={`px-2 py-0.5 rounded text-[10px] font-medium transition-colors ${
-                  activePeriod === p
+                  period === p
                     ? "bg-primary text-primary-foreground"
                     : "bg-muted text-muted-foreground hover:bg-accent"
                 }`}

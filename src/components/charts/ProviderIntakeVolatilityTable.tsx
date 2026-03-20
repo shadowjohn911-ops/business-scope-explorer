@@ -4,7 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { HelpCircle, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
+type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
+const periods: PeriodType[] = ["昨日", "近7日", "近30日", "近90日"];
 const bands = ["⬆200%以上", "⬆100%~200%", "⬆50%~100%", "-50%~50%", "⬇50%~75%", "⬇75%~100%", "⬇100%"] as const;
 const bandRanges: Record<string, [number, number]> = {
   "⬆200%以上": [200, 1000], "⬆100%~200%": [100, 200], "⬆50%~100%": [50, 100],
@@ -12,8 +13,6 @@ const bandRanges: Record<string, [number, number]> = {
 };
 const PAGE_SIZE = 20;
 
-// Hardcoded data synchronized with CoreDataSummary organization module
-// ⬆200%以上 must match "进件波动超200%的服务商" counts: 昨日3, 近7日15, 近30日28, 近90日42
 const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
   "⬆200%以上":  { "昨日": { value: 3, rate: 25 },  "近7日": { value: 15, rate: 30 },  "近30日": { value: 28, rate: 20 },  "近90日": { value: 42, rate: 15 } },
   "⬆100%~200%": { "昨日": { value: 2, rate: 15 },  "近7日": { value: 8, rate: -10 },  "近30日": { value: 15, rate: 12 },  "近90日": { value: 22, rate: 10 } },
@@ -38,10 +37,13 @@ const generateDetails = (band: string, entityLabel: string, count: number) => {
 };
 
 type DetailSortField = "currentCount" | "volatility";
-interface Props { entityLabel?: string; }
+interface Props {
+  entityLabel?: string;
+  period: PeriodType;
+  onPeriodChange: (p: PeriodType) => void;
+}
 
-const ProviderIntakeVolatilityTable = ({ entityLabel = "服务商" }: Props) => {
-  const [activePeriod, setActivePeriod] = useState<string>("近7日");
+const ProviderIntakeVolatilityTable = ({ entityLabel = "服务商", period, onPeriodChange }: Props) => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailTitle, setDetailTitle] = useState("");
   const [detailPeriod, setDetailPeriod] = useState("近7日");
@@ -50,10 +52,10 @@ const ProviderIntakeVolatilityTable = ({ entityLabel = "服务商" }: Props) => 
   const [sortAsc, setSortAsc] = useState(false);
   const [page, setPage] = useState(1);
 
-  const handleCellClick = (band: string, period: string, value: number) => {
+  const handleCellClick = (band: string, p: string, value: number) => {
     if (value < 100) {
-      setDetailTitle(`${band} · ${period} 明细`);
-      setDetailPeriod(period);
+      setDetailTitle(`${band} · ${p} 明细`);
+      setDetailPeriod(p);
       setDetails(generateDetails(band, entityLabel, value));
       setPage(1);
       setDetailOpen(true);
@@ -77,7 +79,7 @@ const ProviderIntakeVolatilityTable = ({ entityLabel = "服务商" }: Props) => 
             <CardTitle className="text-xs font-semibold text-foreground">{entityLabel}进件洞察</CardTitle>
             <div className="flex items-center gap-1.5">
               <div className="flex bg-muted rounded-md p-0.5">
-                {periods.map((p) => (<button key={p} onClick={() => setActivePeriod(p)} className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${activePeriod === p ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}>{p}</button>))}
+                {periods.map((p) => (<button key={p} onClick={() => onPeriodChange(p)} className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${period === p ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}>{p}</button>))}
               </div>
               <Popover>
                 <PopoverTrigger asChild><button className="p-0.5 rounded-full hover:bg-muted transition-colors"><HelpCircle className="w-3.5 h-3.5 text-muted-foreground" /></button></PopoverTrigger>
@@ -92,20 +94,18 @@ const ProviderIntakeVolatilityTable = ({ entityLabel = "服务商" }: Props) => 
         <CardContent className="px-3 py-2.5 pt-1">
           <div className="space-y-0">
             {bands.map((band) => {
-              const { value: count, rate } = mockData[band][activePeriod];
-              const maxCount = Math.max(...bands.map((b) => mockData[b][activePeriod].value));
+              const { value: count, rate } = mockData[band][period];
+              const maxCount = Math.max(...bands.map((b) => mockData[b][period].value));
               const barWidth = maxCount > 0 ? (count / maxCount) * 100 : 0;
               const clickable = count < 100;
               const isPositive = rate > 0;
               return (
-                <div key={band} className={`flex items-center py-1.5 border-b border-border last:border-0 ${clickable ? "cursor-pointer hover:bg-muted/30 rounded" : ""}`} onClick={() => handleCellClick(band, activePeriod, count)}>
+                <div key={band} className={`flex items-center py-1.5 border-b border-border last:border-0 ${clickable ? "cursor-pointer hover:bg-muted/30 rounded" : ""}`} onClick={() => handleCellClick(band, period, count)}>
                   <span className={`text-[10px] w-24 shrink-0 font-medium ${getBandColor(band)}`}>{band}</span>
-                  <div className="flex-1 flex items-center gap-2">
+                  <div className="flex-1 flex items-center gap-1">
                     <div className="flex-1 h-3 bg-muted rounded-sm overflow-hidden"><div className="h-full rounded-sm transition-all" style={{ width: `${barWidth}%`, backgroundColor: getBarColor(band) }} /></div>
-                    <div className="flex items-baseline gap-1 w-16 justify-end shrink-0">
-                      <span className={`text-[10px] font-semibold ${clickable ? "text-primary underline underline-offset-2" : "text-foreground"}`}>{count}</span>
-                      <span className={`text-[9px] ${isPositive ? "text-emerald-600" : "text-red-500"}`}>{isPositive ? "+" : ""}{rate}%</span>
-                    </div>
+                    <span className={`text-[10px] font-semibold w-8 text-right shrink-0 ${clickable ? "text-primary underline underline-offset-2" : "text-foreground"}`}>{count}</span>
+                    <span className={`text-[9px] w-10 text-right shrink-0 ${isPositive ? "text-emerald-600" : "text-red-500"}`}>{isPositive ? "+" : ""}{rate}%</span>
                   </div>
                 </div>
               );
