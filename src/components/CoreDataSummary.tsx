@@ -81,7 +81,7 @@ function generateTransactionSummary(period: PeriodType, role: RoleType): Summary
   const prodTotal = prodData.reduce((s, d) => s + d.value, 0);
   const prodSorted = [...prodData].sort((a, b) => b.value - a.value);
   const prodParts = prodSorted.map(p => `${p.name}${((p.value / prodTotal) * 100).toFixed(0)}%`);
-  const productSummary = `${prodParts.join("、")}，产品体系集中，基础产品仍为核心。`;
+  const productSummary = `${prodParts.join("、")}。`;
 
   return [
     { title: "交易规模", content: scaleSummary },
