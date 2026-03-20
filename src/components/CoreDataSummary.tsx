@@ -1,4 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { transactionInsightData } from "@/components/charts/TransactionInsightTable";
+import { channelCostData, channelCostRates } from "@/components/charts/ChannelCostTable";
+import { industryBase, cardTypeBase, productBase } from "@/components/charts/TransactionDistributionChart";
 
 type ModuleType = "merchant" | "transaction" | "organization";
 type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
@@ -32,36 +35,58 @@ const merchantSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
   ],
 };
 
-const transactionSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
-  "昨日": [
-    { title: "交易规模", content: "昨日交易金额120万元，环比增长5.0%；交易笔数8000笔，环比增长3.0%；笔均金额150元，环比提升2.0%，整体交易稳步增长，活跃度与客单价同步提升。" },
-    { title: "通道成本", content: "通道总成本0.342万元（3420元），其中交换费0.30万元（费率0.25%），清算费0.042万元（费率0.035%），环比增长4.0%；成本结构合理。" },
-    { title: "行业结构", content: "餐饮、零售合计贡献50%的交易额；生活服务、教育培训占比分别为16%和10%，行业结构稳定，仍以餐饮零售为主力。" },
-    { title: "卡种偏好", content: "扫码支付占比45%居首位，贷记卡、借记卡分别占30%和20%，支付方式呈现移动支付与信用消费主导；借贷比（贷记卡/借记卡）为1.5。" },
-    { title: "产品分布", content: "标准产品交易额占比72%，优惠产品、定制产品分别占20%和8%，产品体系集中，基础产品仍为核心。" },
-  ],
-  "近7日": [
-    { title: "交易规模", content: "近7日交易金额850万元，环比增长8.0%；交易笔数5.6万笔，环比增长6.0%；笔均金额152元，环比提升3.0%，整体交易稳步增长，活跃度与客单价同步提升。" },
-    { title: "通道成本", content: "通道总成本3.08万元，其中交换费2.72万元（费率0.32%），清算费0.357万元（费率0.042%），环比增长6.0%；成本结构合理。" },
-    { title: "行业结构", content: "餐饮、零售合计贡献50%的交易额；生活服务、教育培训占比分别为16%和10%，行业结构稳定，仍以餐饮零售为主力。" },
-    { title: "卡种偏好", content: "扫码支付占比45%居首位，贷记卡、借记卡分别占30%和20%，支付方式呈现移动支付与信用消费主导；借贷比（贷记卡/借记卡）为1.5。" },
-    { title: "产品分布", content: "标准产品交易额占比72%，优惠产品、定制产品分别占20%和8%，产品体系集中，基础产品仍为核心。" },
-  ],
-  "近30日": [
-    { title: "交易规模", content: "近30日交易金额3200万元，环比增长12.0%；交易笔数21.3万笔，环比增长9.0%；笔均金额150元，环比提升2.0%，整体交易稳步增长，活跃度与客单价同步提升。" },
-    { title: "通道成本", content: "通道总成本10.18万元，其中交换费8.96万元（费率0.28%），清算费1.216万元（费率0.038%），环比增长5.0%；成本结构合理。" },
-    { title: "行业结构", content: "餐饮、零售合计贡献50%的交易额；生活服务、教育培训占比分别为16%和10%，行业结构稳定，仍以餐饮零售为主力。" },
-    { title: "卡种偏好", content: "扫码支付占比45%居首位，贷记卡、借记卡分别占30%和20%，支付方式呈现移动支付与信用消费主导；借贷比（贷记卡/借记卡）为1.5。" },
-    { title: "产品分布", content: "标准产品交易额占比72%，优惠产品、定制产品分别占20%和8%，产品体系集中，基础产品仍为核心。" },
-  ],
-  "近90日": [
-    { title: "交易规模", content: "近90日交易金额9500万元，环比增长15.0%；交易笔数63.3万笔，环比增长11.0%；笔均金额150元，环比提升3.0%，整体交易稳步增长，活跃度与客单价同步提升。" },
-    { title: "通道成本", content: "通道总成本37.81万元，其中交换费33.25万元（费率0.35%），清算费4.56万元（费率0.048%），环比增长6.0%；成本结构合理。" },
-    { title: "行业结构", content: "餐饮、零售合计贡献50%的交易额；生活服务、教育培训占比分别为16%和10%，行业结构稳定，仍以餐饮零售为主力。" },
-    { title: "卡种偏好", content: "扫码支付占比45%居首位，贷记卡、借记卡分别占30%和20%，支付方式呈现移动支付与信用消费主导；借贷比（贷记卡/借记卡）为1.5。" },
-    { title: "产品分布", content: "标准产品交易额占比72%，优惠产品、定制产品分别占20%和8%，产品体系集中，基础产品仍为核心。" },
-  ],
-};
+function generateTransactionSummary(period: PeriodType): SummaryItem[] {
+  // --- 交易规模 ---
+  const txAmount = transactionInsightData["交易金额"][period];
+  const txCount = transactionInsightData["交易笔数"][period];
+  const txAvg = transactionInsightData["笔均金额"][period];
+  const amtDir = txAmount.rate > 0 ? "增长" : "下降";
+  const cntDir = txCount.rate > 0 ? "增长" : "下降";
+  const avgDir = txAvg.rate > 0 ? "提升" : "下降";
+  const scaleSummary = `${period === "昨日" ? "昨日" : period}交易金额${txAmount.value}元，环比${amtDir}${Math.abs(txAmount.rate).toFixed(1)}%；交易笔数${txCount.value}笔，环比${cntDir}${Math.abs(txCount.rate).toFixed(1)}%；笔均金额${txAvg.value}元，环比${avgDir}${Math.abs(txAvg.rate).toFixed(1)}%，整体交易稳步增长，活跃度与客单价同步提升。`;
+
+  // --- 通道成本 ---
+  const costTotal = channelCostData["总计"][period];
+  const costInterchange = channelCostData["交换费"][period];
+  const costClearing = channelCostData["清算费"][period];
+  const rates = channelCostRates[period];
+  const costDir = costTotal.rate > 0 ? "增长" : "下降";
+  const costSummary = `通道总成本${costTotal.value}万元，其中交换费${costInterchange.value}万元（费率${rates.interchangeRate}%），清算费${costClearing.value}万元（费率${rates.clearingRate}%），环比${costDir}${Math.abs(costTotal.rate).toFixed(1)}%；成本结构合理。`;
+
+  // --- 行业结构 ---
+  const indTotal = industryBase.reduce((s, d) => s + d.value, 0);
+  const sorted = [...industryBase].sort((a, b) => b.value - a.value);
+  const top1 = sorted[0], top2 = sorted[1], top3 = sorted[2], top4 = sorted[3];
+  const top1Pct = ((top1.value / indTotal) * 100).toFixed(0);
+  const top2Pct = ((top2.value / indTotal) * 100).toFixed(0);
+  const top12Pct = (((top1.value + top2.value) / indTotal) * 100).toFixed(0);
+  const top3Pct = ((top3.value / indTotal) * 100).toFixed(0);
+  const top4Pct = ((top4.value / indTotal) * 100).toFixed(0);
+  const industrySummary = `${top1.name}（${top1Pct}%）、${top2.name}（${top2Pct}%）合计贡献${top12Pct}%的交易额；${top3.name}、${top4.name}占比分别为${top3Pct}%和${top4Pct}%，行业结构稳定，仍以${top1.name}${top2.name}为主力。`;
+
+  // --- 卡种偏好 ---
+  const cardTotal = cardTypeBase.reduce((s, d) => s + d.value, 0);
+  const cardSorted = [...cardTypeBase].sort((a, b) => b.value - a.value);
+  const cardParts = cardSorted.map(c => `${c.name}${((c.value / cardTotal) * 100).toFixed(0)}%`);
+  const debit = cardTypeBase.find(c => c.name === "借记卡")!;
+  const credit = cardTypeBase.find(c => c.name === "贷记卡")!;
+  const loanRatio = (credit.value / debit.value).toFixed(1);
+  const cardSummary = `${cardParts[0].replace(/(\d+%)/, "占比$1")}居首位，${cardParts.slice(1).join("、")}，支付方式呈现移动支付与信用消费主导；借贷比（贷记卡/借记卡）为${loanRatio}。`;
+
+  // --- 产品分布 ---
+  const prodTotal = productBase.reduce((s, d) => s + d.value, 0);
+  const prodSorted = [...productBase].sort((a, b) => b.value - a.value);
+  const prodParts = prodSorted.map(p => `${p.name}${((p.value / prodTotal) * 100).toFixed(0)}%`);
+  const productSummary = `${prodParts.join("、")}，产品体系集中，基础产品仍为核心。`;
+
+  return [
+    { title: "交易规模", content: scaleSummary },
+    { title: "通道成本", content: costSummary },
+    { title: "行业结构", content: industrySummary },
+    { title: "卡种偏好", content: cardSummary },
+    { title: "产品分布", content: productSummary },
+  ];
+}
 
 const organizationSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
   "昨日": [
