@@ -8,7 +8,8 @@ import {
   Tooltip,
 } from "recharts";
 
-const periodsOptions = ["昨日", "近7日", "近30日", "近90日"] as const;
+type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
+const periodsOptions: PeriodType[] = ["昨日", "近7日", "近30日", "近90日"];
 type DimensionType = "industry" | "cardType" | "product";
 
 const COLORS = [
@@ -23,7 +24,6 @@ const COLORS = [
 const OTHER_COLOR = "hsl(0, 0%, 20%)";
 const RADIAN = Math.PI / 180;
 
-// Period multipliers to simulate data variation across periods
 const periodMultipliers: Record<string, number> = {
   "昨日": 0.035,
   "近7日": 0.22,
@@ -144,10 +144,11 @@ const renderOuterLabel = ({ cx, cy, midAngle, outerRadius, name, value }: any) =
 interface Props {
   selectedCardTypes: string[];
   selectedProducts: string[];
+  period: PeriodType;
+  onPeriodChange: (p: PeriodType) => void;
 }
 
-const TransactionDistributionChart = ({ selectedCardTypes, selectedProducts }: Props) => {
-  const [period, setPeriod] = useState<string>("近30日");
+const TransactionDistributionChart = ({ selectedCardTypes, selectedProducts, period, onPeriodChange }: Props) => {
   const [dimension, setDimension] = useState<DimensionType>("industry");
 
   const { data, total } = useMemo(() => {
@@ -161,7 +162,7 @@ const TransactionDistributionChart = ({ selectedCardTypes, selectedProducts }: P
       baseData = selectedCardTypes.length > 0
         ? cardTypeBase.filter((d) => selectedCardTypes.includes(d.name))
         : cardTypeBase;
-      groupOther = false; // No "其它" for cardType
+      groupOther = false;
     } else {
       baseData = selectedProducts.length > 0
         ? productBase.filter((d) => selectedProducts.includes(d.name))
@@ -182,7 +183,7 @@ const TransactionDistributionChart = ({ selectedCardTypes, selectedProducts }: P
             {periodsOptions.map((p) => (
               <button
                 key={p}
-                onClick={() => setPeriod(p)}
+                onClick={() => onPeriodChange(p)}
                 className={`px-2 py-0.5 rounded text-[10px] font-medium transition-colors ${
                   period === p ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
                 }`}

@@ -20,6 +20,7 @@ import CoreDataSummary from "@/components/CoreDataSummary";
 
 type RoleType = "branch" | "provider" | "partner";
 type ModuleType = "merchant" | "transaction" | "organization";
+type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
 
 const roleLabels: Record<RoleType, string> = {
   branch: "分公司",
@@ -36,6 +37,7 @@ const Dashboard = () => {
   const [selectedCardTypes, setSelectedCardTypes] = useState<string[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [selectedBusinessModes, setSelectedBusinessModes] = useState<string[]>([]);
+  const [activePeriod, setActivePeriod] = useState<PeriodType>("近7日");
 
   const handleModuleChange = (m: ModuleType) => {
     setActiveModule(m);
@@ -43,9 +45,9 @@ const Dashboard = () => {
     setSelectedCardTypes([]);
     setSelectedProducts([]);
     setSelectedBusinessModes([]);
+    setActivePeriod("近7日");
   };
 
-  // Filter key to force data regeneration when any filter changes
   const filterKey = useMemo(
     () => `${ownerLevel1}-${selectedBusinessModes.join(",")}-${selectedCardTypes.join(",")}-${selectedProducts.join(",")}`,
     [ownerLevel1, selectedBusinessModes, selectedCardTypes, selectedProducts]
@@ -69,6 +71,8 @@ const Dashboard = () => {
         </div>
 
         <div className="flex-1 px-3 pt-3 pb-6">
+          <p className="text-[10px] text-muted-foreground mb-2">数据统计截至 2026-3-20 23:59:59</p>
+
           <DimensionFilters
             role={roleType}
             module={activeModule}
@@ -81,56 +85,58 @@ const Dashboard = () => {
           <div className="mt-4 space-y-3">
             {activeModule === "merchant" && (
               <>
-                <CoreDataSummary module="merchant" />
+                <CoreDataSummary module="merchant" period={activePeriod} onPeriodChange={setActivePeriod} />
                 <MerchantBehaviorTable key={`mb-${filterKey}`} />
                 <ActiveMerchantChart key={`ac-${filterKey}`} />
-                <TransactionVolatilityTable key={`tv-${filterKey}`} />
+                <TransactionVolatilityTable key={`tv-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
               </>
             )}
 
             {activeModule === "transaction" && (
               <>
-                <CoreDataSummary module="transaction" />
+                <CoreDataSummary module="transaction" period={activePeriod} onPeriodChange={setActivePeriod} />
                 <TransactionInsightTable key={`ti-${filterKey}`} />
                 {roleType === "branch" && <ChannelCostTable key={`cc-${filterKey}`} />}
                 <TransactionDistributionChart
                   key={`td-${filterKey}`}
                   selectedCardTypes={selectedCardTypes}
                   selectedProducts={selectedProducts}
+                  period={activePeriod}
+                  onPeriodChange={setActivePeriod}
                 />
               </>
             )}
 
             {activeModule === "organization" && roleType === "branch" && (
               <>
-                <CoreDataSummary module="organization" />
+                <CoreDataSummary module="organization" period={activePeriod} onPeriodChange={setActivePeriod} />
                 {ownerLevel1 !== "自有" && (
                   <>
-                    <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} />
-                    <ProviderTransactionVolatilityTable key={`ptv-${filterKey}`} />
+                    <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
+                    <ProviderTransactionVolatilityTable key={`ptv-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
                     <ProviderDistributionChart key={`pd-${filterKey}`} />
                   </>
                 )}
                 <PartnerBehaviorTable key={`pb-${filterKey}`} />
-                <PartnerIntakeVolatilityTable key={`piv2-${filterKey}`} />
-                <PartnerTransactionVolatilityTable key={`ptv2-${filterKey}`} />
+                <PartnerIntakeVolatilityTable key={`piv2-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
+                <PartnerTransactionVolatilityTable key={`ptv2-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
                 <PartnerDistributionChart key={`pdc-${filterKey}`} />
               </>
             )}
 
             {activeModule === "organization" && roleType === "provider" && (
               <>
-                <CoreDataSummary module="organization" />
+                <CoreDataSummary module="organization" period={activePeriod} onPeriodChange={setActivePeriod} />
                 {ownerLevel1 !== "自有" && (
                   <>
-                    <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} entityLabel="盟友" />
-                    <ProviderTransactionVolatilityTable key={`ptv-${filterKey}`} entityLabel="盟友" />
+                    <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} entityLabel="盟友" period={activePeriod} onPeriodChange={setActivePeriod} />
+                    <ProviderTransactionVolatilityTable key={`ptv-${filterKey}`} entityLabel="盟友" period={activePeriod} onPeriodChange={setActivePeriod} />
                     <ProviderDistributionChart key={`pd-${filterKey}`} entityLabel="盟友" />
                   </>
                 )}
                 <PartnerBehaviorTable key={`pb-${filterKey}`} disableDetails={disablePartnerDetails} />
-                <PartnerIntakeVolatilityTable key={`piv2-${filterKey}`} disableDetails={disablePartnerDetails} />
-                <PartnerTransactionVolatilityTable key={`ptv2-${filterKey}`} disableDetails={disablePartnerDetails} />
+                <PartnerIntakeVolatilityTable key={`piv2-${filterKey}`} disableDetails={disablePartnerDetails} period={activePeriod} onPeriodChange={setActivePeriod} />
+                <PartnerTransactionVolatilityTable key={`ptv2-${filterKey}`} disableDetails={disablePartnerDetails} period={activePeriod} onPeriodChange={setActivePeriod} />
                 <PartnerDistributionChart key={`pdc-${filterKey}`} />
               </>
             )}

@@ -4,7 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { HelpCircle, ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
+type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
+const periods: PeriodType[] = ["昨日", "近7日", "近30日", "近90日"];
 const bands = ["⬆200%以上", "⬆100%~200%", "⬆50%~100%", "-50%~50%", "⬇50%~75%", "⬇75%~100%", "⬇100%"] as const;
 const bandRanges: Record<string, [number, number]> = {
   "⬆200%以上": [200, 1000], "⬆100%~200%": [100, 200], "⬆50%~100%": [50, 100],
@@ -36,10 +37,13 @@ const generateDetails = (band: string, count: number) => {
 };
 
 type DetailSortField = "currentCount" | "volatility";
-interface Props { disableDetails?: boolean; }
+interface Props {
+  disableDetails?: boolean;
+  period: PeriodType;
+  onPeriodChange: (p: PeriodType) => void;
+}
 
-const PartnerIntakeVolatilityTable = ({ disableDetails = false }: Props) => {
-  const [activePeriod, setActivePeriod] = useState<string>("近7日");
+const PartnerIntakeVolatilityTable = ({ disableDetails = false, period, onPeriodChange }: Props) => {
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailTitle, setDetailTitle] = useState("");
   const [detailPeriod, setDetailPeriod] = useState("近7日");
@@ -48,10 +52,10 @@ const PartnerIntakeVolatilityTable = ({ disableDetails = false }: Props) => {
   const [sortAsc, setSortAsc] = useState(false);
   const [page, setPage] = useState(1);
 
-  const handleCellClick = (band: string, period: string, value: number) => {
+  const handleCellClick = (band: string, p: string, value: number) => {
     if (!disableDetails && value < 100) {
-      setDetailTitle(`${band} · ${period} 明细`);
-      setDetailPeriod(period);
+      setDetailTitle(`${band} · ${p} 明细`);
+      setDetailPeriod(p);
       setDetails(generateDetails(band, value));
       setPage(1);
       setDetailOpen(true);
@@ -66,7 +70,6 @@ const PartnerIntakeVolatilityTable = ({ disableDetails = false }: Props) => {
   const sortedDetails = [...details].sort((a, b) => { const diff = a[sortField] - b[sortField]; return sortAsc ? diff : -diff; });
   const totalPages = Math.ceil(sortedDetails.length / PAGE_SIZE);
   const pagedDetails = sortedDetails.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-  
 
   return (
     <>
@@ -76,7 +79,7 @@ const PartnerIntakeVolatilityTable = ({ disableDetails = false }: Props) => {
             <CardTitle className="text-xs font-semibold text-foreground">合作方进件洞察</CardTitle>
             <div className="flex items-center gap-1.5">
               <div className="flex bg-muted rounded-md p-0.5">
-                {periods.map((p) => (<button key={p} onClick={() => setActivePeriod(p)} className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${activePeriod === p ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}>{p}</button>))}
+                {periods.map((p) => (<button key={p} onClick={() => onPeriodChange(p)} className={`px-1.5 py-0.5 rounded text-[10px] font-medium transition-colors ${period === p ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}>{p}</button>))}
               </div>
               <Popover>
                 <PopoverTrigger asChild><button className="p-0.5 rounded-full hover:bg-muted transition-colors"><HelpCircle className="w-3.5 h-3.5 text-muted-foreground" /></button></PopoverTrigger>
@@ -91,20 +94,18 @@ const PartnerIntakeVolatilityTable = ({ disableDetails = false }: Props) => {
         <CardContent className="px-3 py-2.5 pt-1">
           <div className="space-y-0">
             {bands.map((band) => {
-              const { value: count, rate } = mockData[band][activePeriod];
-              const maxCount = Math.max(...bands.map((b) => mockData[b][activePeriod].value));
+              const { value: count, rate } = mockData[band][period];
+              const maxCount = Math.max(...bands.map((b) => mockData[b][period].value));
               const barWidth = maxCount > 0 ? (count / maxCount) * 100 : 0;
               const clickable = !disableDetails && count < 100;
               const isPositive = rate > 0;
               return (
-                <div key={band} className={`flex items-center py-1.5 border-b border-border last:border-0 ${clickable ? "cursor-pointer hover:bg-muted/30 rounded" : ""}`} onClick={() => handleCellClick(band, activePeriod, count)}>
+                <div key={band} className={`flex items-center py-1.5 border-b border-border last:border-0 ${clickable ? "cursor-pointer hover:bg-muted/30 rounded" : ""}`} onClick={() => handleCellClick(band, period, count)}>
                   <span className={`text-[10px] w-24 shrink-0 font-medium ${getBandColor(band)}`}>{band}</span>
-                  <div className="flex-1 flex items-center gap-2">
+                  <div className="flex-1 flex items-center gap-1">
                     <div className="flex-1 h-3 bg-muted rounded-sm overflow-hidden"><div className="h-full rounded-sm transition-all" style={{ width: `${barWidth}%`, backgroundColor: getBarColor(band) }} /></div>
-                    <div className="flex items-baseline gap-1 w-16 justify-end shrink-0">
-                      <span className={`text-[10px] font-semibold ${clickable ? "text-primary underline underline-offset-2" : "text-foreground"}`}>{count}</span>
-                      <span className={`text-[9px] ${isPositive ? "text-emerald-600" : "text-red-500"}`}>{isPositive ? "+" : ""}{rate}%</span>
-                    </div>
+                    <span className={`text-[10px] font-semibold w-8 text-right shrink-0 ${clickable ? "text-primary underline underline-offset-2" : "text-foreground"}`}>{count}</span>
+                    <span className={`text-[9px] w-10 text-right shrink-0 ${isPositive ? "text-emerald-600" : "text-red-500"}`}>{isPositive ? "+" : ""}{rate}%</span>
                   </div>
                 </div>
               );
