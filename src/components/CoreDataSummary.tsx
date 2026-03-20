@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { transactionInsightData } from "@/components/charts/TransactionInsightTable";
 import { channelCostData, channelCostRates } from "@/components/charts/ChannelCostTable";
-import { industryBase, cardTypeBase, productBase } from "@/components/charts/TransactionDistributionChart";
+import { industryBase, cardTypeBase, productBase, applyPeriod } from "@/components/charts/TransactionDistributionChart";
 
 type ModuleType = "merchant" | "transaction" | "organization";
 type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
@@ -53,9 +53,10 @@ function generateTransactionSummary(period: PeriodType): SummaryItem[] {
   const costDir = costTotal.rate > 0 ? "增长" : "下降";
   const costSummary = `通道总成本${costTotal.value}万元，其中交换费${costInterchange.value}万元（费率${rates.interchangeRate}%），清算费${costClearing.value}万元（费率${rates.clearingRate}%），环比${costDir}${Math.abs(costTotal.rate).toFixed(1)}%；成本结构合理。`;
 
-  // --- 行业结构 ---
-  const indTotal = industryBase.reduce((s, d) => s + d.value, 0);
-  const sorted = [...industryBase].sort((a, b) => b.value - a.value);
+  // --- 行业结构 (period-adjusted) ---
+  const industryData = applyPeriod(industryBase, period);
+  const indTotal = industryData.reduce((s, d) => s + d.value, 0);
+  const sorted = [...industryData].sort((a, b) => b.value - a.value);
   const top1 = sorted[0], top2 = sorted[1], top3 = sorted[2], top4 = sorted[3];
   const top1Pct = ((top1.value / indTotal) * 100).toFixed(0);
   const top2Pct = ((top2.value / indTotal) * 100).toFixed(0);
@@ -64,18 +65,20 @@ function generateTransactionSummary(period: PeriodType): SummaryItem[] {
   const top4Pct = ((top4.value / indTotal) * 100).toFixed(0);
   const industrySummary = `${top1.name}（${top1Pct}%）、${top2.name}（${top2Pct}%）合计贡献${top12Pct}%的交易额；${top3.name}、${top4.name}占比分别为${top3Pct}%和${top4Pct}%，行业结构稳定，仍以${top1.name}${top2.name}为主力。`;
 
-  // --- 卡种偏好 ---
-  const cardTotal = cardTypeBase.reduce((s, d) => s + d.value, 0);
-  const cardSorted = [...cardTypeBase].sort((a, b) => b.value - a.value);
+  // --- 卡种偏好 (period-adjusted, 借贷比=贷记卡/借记卡) ---
+  const cardData = applyPeriod(cardTypeBase, period);
+  const cardTotal = cardData.reduce((s, d) => s + d.value, 0);
+  const cardSorted = [...cardData].sort((a, b) => b.value - a.value);
   const cardParts = cardSorted.map(c => `${c.name}${((c.value / cardTotal) * 100).toFixed(0)}%`);
-  const debit = cardTypeBase.find(c => c.name === "借记卡")!;
-  const credit = cardTypeBase.find(c => c.name === "贷记卡")!;
+  const debit = cardData.find(c => c.name === "借记卡")!;
+  const credit = cardData.find(c => c.name === "贷记卡")!;
   const loanRatio = (credit.value / debit.value).toFixed(1);
   const cardSummary = `${cardParts[0].replace(/(\d+%)/, "占比$1")}居首位，${cardParts.slice(1).join("、")}，支付方式呈现移动支付与信用消费主导；借贷比（贷记卡/借记卡）为${loanRatio}。`;
 
-  // --- 产品分布 ---
-  const prodTotal = productBase.reduce((s, d) => s + d.value, 0);
-  const prodSorted = [...productBase].sort((a, b) => b.value - a.value);
+  // --- 产品分布 (period-adjusted, 使用实际产品名称) ---
+  const prodData = applyPeriod(productBase, period);
+  const prodTotal = prodData.reduce((s, d) => s + d.value, 0);
+  const prodSorted = [...prodData].sort((a, b) => b.value - a.value);
   const prodParts = prodSorted.map(p => `${p.name}${((p.value / prodTotal) * 100).toFixed(0)}%`);
   const productSummary = `${prodParts.join("、")}，产品体系集中，基础产品仍为核心。`;
 

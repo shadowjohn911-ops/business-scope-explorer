@@ -65,7 +65,7 @@ export const productBase = [
 ];
 
 // Add slight per-item variance based on period to avoid identical ratios
-const applyPeriod = (raw: { name: string; value: number }[], period: string) => {
+export const applyPeriod = (raw: { name: string; value: number }[], period: string) => {
   const mult = periodMultipliers[period] ?? 1;
   return raw.map((item, i) => ({
     ...item,
