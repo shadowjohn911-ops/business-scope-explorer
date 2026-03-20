@@ -12,7 +12,7 @@ const Watermark = () => {
     canvas.height = 150;
     ctx.rotate((-25 * Math.PI) / 180);
     ctx.font = "14px sans-serif";
-    ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
     ctx.fillText("拉卡拉-蒋晓栋", -10, 100);
 
     const dataUrl = canvas.toDataURL();
