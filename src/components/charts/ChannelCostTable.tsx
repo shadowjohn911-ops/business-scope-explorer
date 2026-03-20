@@ -77,7 +77,7 @@ const ChannelCostTable = () => {
                 <tr key={c} className={`border-b border-border last:border-0 ${c === "总计" ? "bg-muted/30 font-semibold" : ""}`}>
                   <td className="py-2 pr-2 font-medium text-foreground">{c}</td>
                   {periods.map((p) => {
-                    const { value, rate } = mockData[c][p];
+                    const { value, rate } = channelCostData[c][p];
                     const isPositive = rate > 0;
                     return (
                       <td key={p} className="text-center py-2 px-1">

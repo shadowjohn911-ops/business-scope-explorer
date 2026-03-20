@@ -35,7 +35,7 @@ const periodMultipliers: Record<string, number> = {
 };
 
 // Sum = 3203 ≈ 3200万 (近30日 base)
-const industryBase = [
+export const industryBase = [
   { name: "餐饮", value: 903 },
   { name: "零售", value: 705 },
   { name: "生活服务", value: 508 },
@@ -49,7 +49,7 @@ const industryBase = [
 ];
 
 // Sum = 3201 ≈ 3200万
-const cardTypeBase = [
+export const cardTypeBase = [
   { name: "借记卡", value: 640 },
   { name: "贷记卡", value: 960 },
   { name: "扫码", value: 1440 },
@@ -57,7 +57,7 @@ const cardTypeBase = [
 ];
 
 // Sum = 3201 ≈ 3200万
-const productBase = [
+export const productBase = [
   { name: "收款码", value: 1057 },
   { name: "POS", value: 936 },
   { name: "扫码盒", value: 664 },

@@ -83,7 +83,7 @@ const TransactionInsightTable = () => {
                 <tr key={m} className="border-b border-border last:border-0">
                   <td className="py-2 pr-2 font-medium text-foreground">{m}</td>
                   {periods.map((p) => {
-                    const { value, rate } = mockData[m][p];
+                    const { value, rate } = transactionInsightData[m][p];
                     const isPositive = rate > 0;
                     return (
                       <td key={p} className="text-center py-2 px-1">
