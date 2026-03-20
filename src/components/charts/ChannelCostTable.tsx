@@ -5,12 +5,16 @@ import { HelpCircle } from "lucide-react";
 const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const allCostTypes = ["交换费", "清算费", "总计"] as const;
 
-// 交换费 = 交易金额 × 交换费率（0.15%-0.45%随机）
-// 清算费 = 交易金额 × 清算费率（0.015%-0.0525%随机）
-// 昨日:120万 近7日:850万 近30日:3200万 近90日:9500万
 // 交换费率: 昨日0.25% 近7日0.32% 近30日0.28% 近90日0.35%
 // 清算费率: 昨日0.035% 近7日0.042% 近30日0.038% 近90日0.048%
-const mockData: Record<string, Record<string, { value: string; rate: number }>> = {
+export const channelCostRates: Record<string, { interchangeRate: number; clearingRate: number }> = {
+  "昨日": { interchangeRate: 0.25, clearingRate: 0.035 },
+  "近7日": { interchangeRate: 0.32, clearingRate: 0.042 },
+  "近30日": { interchangeRate: 0.28, clearingRate: 0.038 },
+  "近90日": { interchangeRate: 0.35, clearingRate: 0.048 },
+};
+
+export const channelCostData: Record<string, Record<string, { value: string; rate: number }>> = {
   "交换费": {
     "昨日": { value: "0.30", rate: 3 },
     "近7日": { value: "2.72", rate: 5 },
