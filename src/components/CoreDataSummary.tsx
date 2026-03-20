@@ -4,6 +4,7 @@ import { channelCostData, channelCostRates } from "@/components/charts/ChannelCo
 import { industryBase, cardTypeBase, productBase, applyPeriod } from "@/components/charts/TransactionDistributionChart";
 
 type ModuleType = "merchant" | "transaction" | "organization";
+type RoleType = "branch" | "provider" | "partner";
 type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
 
 interface SummaryItem {
