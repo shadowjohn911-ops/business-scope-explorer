@@ -125,7 +125,7 @@ const ActiveMerchantChart = () => {
     <Card className="border-border">
       <CardHeader className="px-3 py-2.5 pb-1">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xs font-semibold text-foreground">日活跃商户分布</CardTitle>
+          <CardTitle className="text-xs font-semibold text-foreground">昨日活跃商户分布</CardTitle>
           <div className="flex bg-muted rounded-md p-0.5">
             <button
               onClick={() => setDimension("survival")}

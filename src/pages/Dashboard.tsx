@@ -87,8 +87,8 @@ const Dashboard = () => {
               <>
                 <CoreDataSummary module="merchant" period={activePeriod} onPeriodChange={setActivePeriod} />
                 <MerchantBehaviorTable key={`mb-${filterKey}`} />
-                <ActiveMerchantChart key={`ac-${filterKey}`} />
                 <TransactionVolatilityTable key={`tv-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
+                <ActiveMerchantChart key={`ac-${filterKey}`} />
               </>
             )}
 
