@@ -8,7 +8,7 @@ const metrics = ["交易金额", "交易笔数", "笔均金额", "台均金额",
 // Unified transaction data:
 // 昨日:120万 近7日:850万 近30日:3200万 近90日:9500万
 // 笔均100-200, 日台均~2000, 日户均~3000, 笔均<台均<户均
-const mockData: Record<string, Record<string, { value: string; rate: number }>> = {
+export const transactionInsightData: Record<string, Record<string, { value: string; rate: number }>> = {
   "交易金额": {
     "昨日": { value: "120万", rate: 5 },
     "近7日": { value: "850万", rate: 8 },
@@ -83,7 +83,7 @@ const TransactionInsightTable = () => {
                 <tr key={m} className="border-b border-border last:border-0">
                   <td className="py-2 pr-2 font-medium text-foreground">{m}</td>
                   {periods.map((p) => {
-                    const { value, rate } = mockData[m][p];
+                    const { value, rate } = transactionInsightData[m][p];
                     const isPositive = rate > 0;
                     return (
                       <td key={p} className="text-center py-2 px-1">
