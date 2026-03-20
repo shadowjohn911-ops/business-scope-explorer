@@ -71,7 +71,7 @@ const Dashboard = () => {
         </div>
 
         <div className="flex-1 px-3 pt-3 pb-6">
-          <p className="text-[10px] text-muted-foreground mb-2">数据统计截至 2026-3-20 23:59:59</p>
+          <p className="text-[10px] text-muted-foreground mb-2 text-right">数据统计截至 2026-3-20 23:59:59</p>
 
           <DimensionFilters
             role={roleType}
