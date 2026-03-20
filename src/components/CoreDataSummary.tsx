@@ -36,7 +36,7 @@ const merchantSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
   ],
 };
 
-function generateTransactionSummary(period: PeriodType): SummaryItem[] {
+function generateTransactionSummary(period: PeriodType, role: RoleType): SummaryItem[] {
   // --- 交易规模 ---
   const txAmount = transactionInsightData["交易金额"][period];
   const txCount = transactionInsightData["交易笔数"][period];
