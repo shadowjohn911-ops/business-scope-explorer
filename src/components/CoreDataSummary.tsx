@@ -132,11 +132,12 @@ interface Props {
   module: ModuleType;
   period: PeriodType;
   onPeriodChange: (p: PeriodType) => void;
+  role?: RoleType;
 }
 
-const CoreDataSummary = ({ module, period, onPeriodChange }: Props) => {
+const CoreDataSummary = ({ module, period, onPeriodChange, role = "branch" }: Props) => {
   const items = module === "transaction"
-    ? generateTransactionSummary(period)
+    ? generateTransactionSummary(period, role)
     : summaryByPeriodMap[module]![period];
 
   return (
