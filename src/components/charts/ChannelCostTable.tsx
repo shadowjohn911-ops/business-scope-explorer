@@ -5,27 +5,29 @@ import { HelpCircle } from "lucide-react";
 const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const allCostTypes = ["交换费", "清算费", "总计"] as const;
 
-// Channel cost at 0.04%-0.05% of transaction volume
+// 交换费 = 交易金额 × 交换费率（0.15%-0.45%随机）
+// 清算费 = 交易金额 × 清算费率（0.015%-0.0525%随机）
 // 昨日:120万 近7日:850万 近30日:3200万 近90日:9500万
-// 交换费~65%, 清算费~35%
+// 交换费率: 昨日0.25% 近7日0.32% 近30日0.28% 近90日0.35%
+// 清算费率: 昨日0.035% 近7日0.042% 近30日0.038% 近90日0.048%
 const mockData: Record<string, Record<string, { value: string; rate: number }>> = {
   "交换费": {
-    "昨日": { value: "0.035", rate: 3 },
-    "近7日": { value: "0.25", rate: 5 },
-    "近30日": { value: "0.92", rate: 4 },
-    "近90日": { value: "2.59", rate: 6 },
+    "昨日": { value: "0.30", rate: 3 },
+    "近7日": { value: "2.72", rate: 5 },
+    "近30日": { value: "8.96", rate: 4 },
+    "近90日": { value: "33.25", rate: 6 },
   },
   "清算费": {
-    "昨日": { value: "0.019", rate: 5 },
-    "近7日": { value: "0.14", rate: 8 },
-    "近30日": { value: "0.49", rate: 6 },
-    "近90日": { value: "1.40", rate: 7 },
+    "昨日": { value: "0.042", rate: 5 },
+    "近7日": { value: "0.357", rate: 8 },
+    "近30日": { value: "1.216", rate: 6 },
+    "近90日": { value: "4.56", rate: 7 },
   },
   "总计": {
-    "昨日": { value: "0.054", rate: 4 },
-    "近7日": { value: "0.39", rate: 6 },
-    "近30日": { value: "1.41", rate: 5 },
-    "近90日": { value: "3.99", rate: 6 },
+    "昨日": { value: "0.342", rate: 4 },
+    "近7日": { value: "3.08", rate: 6 },
+    "近30日": { value: "10.18", rate: 5 },
+    "近90日": { value: "37.81", rate: 6 },
   },
 };
 
