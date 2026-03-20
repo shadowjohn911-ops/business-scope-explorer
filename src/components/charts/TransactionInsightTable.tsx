@@ -5,37 +5,39 @@ import { HelpCircle } from "lucide-react";
 const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const metrics = ["交易金额", "交易笔数", "笔均金额", "台均金额", "户均金额"] as const;
 
-// Hardcoded data synchronized with CoreDataSummary transaction module
-const mockData: Record<string, Record<string, { value: number | string; rate: number }>> = {
+// Unified transaction data:
+// 昨日:120万 近7日:850万 近30日:3200万 近90日:9500万
+// 笔均100-200, 日台均~2000, 日户均~3000, 笔均<台均<户均
+const mockData: Record<string, Record<string, { value: string; rate: number }>> = {
   "交易金额": {
     "昨日": { value: "120万", rate: 5 },
-    "近7日": { value: "850万", rate: 12 },
-    "近30日": { value: "3200万", rate: 15 },
-    "近90日": { value: "9500万", rate: 18 },
+    "近7日": { value: "850万", rate: 8 },
+    "近30日": { value: "3200万", rate: 12 },
+    "近90日": { value: "9500万", rate: 15 },
   },
   "交易笔数": {
-    "昨日": { value: "1800", rate: 3 },
-    "近7日": { value: "1.2万", rate: 8 },
-    "近30日": { value: "4.5万", rate: 10 },
-    "近90日": { value: "13万", rate: 12 },
+    "昨日": { value: "8000", rate: 3 },
+    "近7日": { value: "5.6万", rate: 6 },
+    "近30日": { value: "21.3万", rate: 9 },
+    "近90日": { value: "63.3万", rate: 11 },
   },
   "笔均金额": {
-    "昨日": { value: "667", rate: 2 },
-    "近7日": { value: "708", rate: 4 },
-    "近30日": { value: "711", rate: 5 },
-    "近90日": { value: "731", rate: 5 },
+    "昨日": { value: "150", rate: 2 },
+    "近7日": { value: "152", rate: 3 },
+    "近30日": { value: "150", rate: 2 },
+    "近90日": { value: "150", rate: 3 },
   },
   "台均金额": {
-    "昨日": { value: "480", rate: 3 },
-    "近7日": { value: "2800", rate: 6 },
-    "近30日": { value: "8500", rate: 8 },
-    "近90日": { value: "2.2万", rate: 10 },
+    "昨日": { value: "2000", rate: 3 },
+    "近7日": { value: "1.4万", rate: 5 },
+    "近30日": { value: "6万", rate: 7 },
+    "近90日": { value: "18万", rate: 8 },
   },
   "户均金额": {
-    "昨日": { value: "350", rate: 8 },
-    "近7日": { value: "2400", rate: 15 },
-    "近30日": { value: "8500", rate: 18 },
-    "近90日": { value: "2.4万", rate: 22 },
+    "昨日": { value: "3000", rate: 4 },
+    "近7日": { value: "2.1万", rate: 6 },
+    "近30日": { value: "9万", rate: 8 },
+    "近90日": { value: "27万", rate: 10 },
   },
 };
 
@@ -52,7 +54,7 @@ const TransactionInsightTable = () => {
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-72 text-[11px] leading-relaxed text-foreground" side="left" align="start">
-              表格中的数值表示在指定回溯周期内（如近7日、近30日）各交易指标（如交易金额、交易笔数）的统计值；百分比表示当前周期相较于上一周期的环比变化率（正数表示增长，负数表示下降）。
+              表格中的数值表示在指定回溯周期内（如近7日、近30日）各交易指标（如交易金额、交易笔数）的统计值；百分比表示当前周期相较于上一周期的环比变化率（正数表示增长，负数表示下降）。台均金额和户均金额为期间累计值。
             </PopoverContent>
           </Popover>
         </div>

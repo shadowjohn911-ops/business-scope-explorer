@@ -24,38 +24,44 @@ const COLORS = [
 const OTHER_COLOR = "hsl(0, 0%, 20%)";
 const RADIAN = Math.PI / 180;
 
+// Multipliers to match unified transaction totals:
+// 昨日:120万 近7日:850万 近30日:3200万 近90日:9500万
+// Base data sums to ~3200 (matching 近30日)
 const periodMultipliers: Record<string, number> = {
-  "昨日": 0.035,
-  "近7日": 0.22,
+  "昨日": 0.0375,
+  "近7日": 0.2656,
   "近30日": 1,
-  "近90日": 2.8,
+  "近90日": 2.969,
 };
 
+// Sum = 3203 ≈ 3200万 (近30日 base)
 const industryBase = [
-  { name: "餐饮", value: 3200 },
-  { name: "零售", value: 2500 },
-  { name: "生活服务", value: 1800 },
-  { name: "教育培训", value: 1100 },
-  { name: "医疗健康", value: 850 },
-  { name: "美容美发", value: 680 },
-  { name: "住宿", value: 520 },
-  { name: "汽车服务", value: 350 },
-  { name: "文体娱乐", value: 220 },
-  { name: "家政服务", value: 130 },
+  { name: "餐饮", value: 903 },
+  { name: "零售", value: 705 },
+  { name: "生活服务", value: 508 },
+  { name: "教育培训", value: 310 },
+  { name: "医疗健康", value: 240 },
+  { name: "美容美发", value: 192 },
+  { name: "住宿", value: 147 },
+  { name: "汽车服务", value: 99 },
+  { name: "文体娱乐", value: 62 },
+  { name: "家政服务", value: 37 },
 ];
 
+// Sum = 3201 ≈ 3200万
 const cardTypeBase = [
-  { name: "借记卡", value: 4200 },
-  { name: "贷记卡", value: 3800 },
-  { name: "扫码", value: 2600 },
-  { name: "外卡", value: 450 },
+  { name: "借记卡", value: 640 },
+  { name: "贷记卡", value: 960 },
+  { name: "扫码", value: 1440 },
+  { name: "外卡", value: 161 },
 ];
 
+// Sum = 3201 ≈ 3200万
 const productBase = [
-  { name: "收款码", value: 3500 },
-  { name: "POS", value: 3100 },
-  { name: "扫码盒", value: 2200 },
-  { name: "智能POS", value: 1800 },
+  { name: "收款码", value: 1057 },
+  { name: "POS", value: 936 },
+  { name: "扫码盒", value: 664 },
+  { name: "智能POS", value: 544 },
 ];
 
 // Add slight per-item variance based on period to avoid identical ratios
