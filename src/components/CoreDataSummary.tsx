@@ -4,6 +4,7 @@ import { channelCostData, channelCostRates } from "@/components/charts/ChannelCo
 import { industryBase, cardTypeBase, productBase, applyPeriod } from "@/components/charts/TransactionDistributionChart";
 
 type ModuleType = "merchant" | "transaction" | "organization";
+type RoleType = "branch" | "provider" | "partner";
 type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
 
 interface SummaryItem {
@@ -35,7 +36,7 @@ const merchantSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
   ],
 };
 
-function generateTransactionSummary(period: PeriodType): SummaryItem[] {
+function generateTransactionSummary(period: PeriodType, role: RoleType): SummaryItem[] {
   // --- 交易规模 ---
   const txAmount = transactionInsightData["交易金额"][period];
   const txCount = transactionInsightData["交易笔数"][period];
@@ -51,7 +52,7 @@ function generateTransactionSummary(period: PeriodType): SummaryItem[] {
   const costClearing = channelCostData["清算费"][period];
   const rates = channelCostRates[period];
   const costDir = costTotal.rate > 0 ? "增长" : "下降";
-  const costSummary = `通道总成本${costTotal.value}万元，其中交换费${costInterchange.value}万元（费率${rates.interchangeRate}%），清算费${costClearing.value}万元（费率${rates.clearingRate}%），环比${costDir}${Math.abs(costTotal.rate).toFixed(1)}%；成本结构合理。`;
+  const costSummary = `通道总成本${costTotal.value}万元，其中交换费${costInterchange.value}万元（费率${rates.interchangeRate}%），清算费${costClearing.value}万元（费率${rates.clearingRate}%），通道成本率在合理区间范围。`;
 
   // --- 行业结构 (period-adjusted) ---
   const industryData = applyPeriod(industryBase, period);
@@ -80,15 +81,20 @@ function generateTransactionSummary(period: PeriodType): SummaryItem[] {
   const prodTotal = prodData.reduce((s, d) => s + d.value, 0);
   const prodSorted = [...prodData].sort((a, b) => b.value - a.value);
   const prodParts = prodSorted.map(p => `${p.name}${((p.value / prodTotal) * 100).toFixed(0)}%`);
-  const productSummary = `${prodParts.join("、")}，产品体系集中，基础产品仍为核心。`;
+  const productSummary = `${prodParts.join("、")}。`;
 
-  return [
+  const result: SummaryItem[] = [
     { title: "交易规模", content: scaleSummary },
-    { title: "通道成本", content: costSummary },
+  ];
+  if (role === "branch") {
+    result.push({ title: "通道成本", content: costSummary });
+  }
+  result.push(
     { title: "行业结构", content: industrySummary },
     { title: "卡种偏好", content: cardSummary },
     { title: "产品分布", content: productSummary },
-  ];
+  );
+  return result;
 }
 
 const organizationSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
@@ -126,11 +132,12 @@ interface Props {
   module: ModuleType;
   period: PeriodType;
   onPeriodChange: (p: PeriodType) => void;
+  role?: RoleType;
 }
 
-const CoreDataSummary = ({ module, period, onPeriodChange }: Props) => {
+const CoreDataSummary = ({ module, period, onPeriodChange, role = "branch" }: Props) => {
   const items = module === "transaction"
-    ? generateTransactionSummary(period)
+    ? generateTransactionSummary(period, role)
     : summaryByPeriodMap[module]![period];
 
   return (

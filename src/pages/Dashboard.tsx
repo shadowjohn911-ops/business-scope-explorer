@@ -85,7 +85,7 @@ const Dashboard = () => {
           <div className="mt-4 space-y-3">
             {activeModule === "merchant" && (
               <>
-                <CoreDataSummary module="merchant" period={activePeriod} onPeriodChange={setActivePeriod} />
+                <CoreDataSummary module="merchant" period={activePeriod} onPeriodChange={setActivePeriod} role={roleType} />
                 <MerchantBehaviorTable key={`mb-${filterKey}`} />
                 <TransactionVolatilityTable key={`tv-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
                 <ActiveMerchantChart key={`ac-${filterKey}`} />
@@ -94,7 +94,7 @@ const Dashboard = () => {
 
             {activeModule === "transaction" && (
               <>
-                <CoreDataSummary module="transaction" period={activePeriod} onPeriodChange={setActivePeriod} />
+                <CoreDataSummary module="transaction" period={activePeriod} onPeriodChange={setActivePeriod} role={roleType} />
                 <TransactionInsightTable key={`ti-${filterKey}`} />
                 {roleType === "branch" && <ChannelCostTable key={`cc-${filterKey}`} />}
                 <TransactionDistributionChart
@@ -109,7 +109,7 @@ const Dashboard = () => {
 
             {activeModule === "organization" && roleType === "branch" && (
               <>
-                <CoreDataSummary module="organization" period={activePeriod} onPeriodChange={setActivePeriod} />
+                <CoreDataSummary module="organization" period={activePeriod} onPeriodChange={setActivePeriod} role={roleType} />
                 {ownerLevel1 !== "自有" && (
                   <>
                     <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} period={activePeriod} onPeriodChange={setActivePeriod} />
@@ -126,7 +126,7 @@ const Dashboard = () => {
 
             {activeModule === "organization" && roleType === "provider" && (
               <>
-                <CoreDataSummary module="organization" period={activePeriod} onPeriodChange={setActivePeriod} />
+                <CoreDataSummary module="organization" period={activePeriod} onPeriodChange={setActivePeriod} role={roleType} />
                 {ownerLevel1 !== "自有" && (
                   <>
                     <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} entityLabel="盟友" period={activePeriod} onPeriodChange={setActivePeriod} />
