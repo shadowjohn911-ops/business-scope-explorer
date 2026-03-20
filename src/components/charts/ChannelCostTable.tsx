@@ -5,25 +5,27 @@ import { HelpCircle } from "lucide-react";
 const periods = ["昨日", "近7日", "近30日", "近90日"] as const;
 const allCostTypes = ["交换费", "清算费", "总计"] as const;
 
-// Hardcoded data synchronized with CoreDataSummary transaction module
+// Channel cost at 0.04%-0.05% of transaction volume
+// 昨日:120万 近7日:850万 近30日:3200万 近90日:9500万
+// 交换费~65%, 清算费~35%
 const mockData: Record<string, Record<string, { value: string; rate: number }>> = {
   "交换费": {
-    "昨日": { value: "0.43", rate: 3 },
-    "近7日": { value: "3.02", rate: 5 },
-    "近30日": { value: "11.22", rate: 8 },
-    "近90日": { value: "32.55", rate: 10 },
+    "昨日": { value: "0.035", rate: 3 },
+    "近7日": { value: "0.25", rate: 5 },
+    "近30日": { value: "0.92", rate: 4 },
+    "近90日": { value: "2.59", rate: 6 },
   },
   "清算费": {
-    "昨日": { value: "0.17", rate: 5 },
-    "近7日": { value: "1.18", rate: 8 },
-    "近30日": { value: "4.58", rate: 10 },
-    "近90日": { value: "13.95", rate: 12 },
+    "昨日": { value: "0.019", rate: 5 },
+    "近7日": { value: "0.14", rate: 8 },
+    "近30日": { value: "0.49", rate: 6 },
+    "近90日": { value: "1.40", rate: 7 },
   },
   "总计": {
-    "昨日": { value: "0.60", rate: 4 },
-    "近7日": { value: "4.20", rate: 6 },
-    "近30日": { value: "15.80", rate: 9 },
-    "近90日": { value: "46.50", rate: 11 },
+    "昨日": { value: "0.054", rate: 4 },
+    "近7日": { value: "0.39", rate: 6 },
+    "近30日": { value: "1.41", rate: 5 },
+    "近90日": { value: "3.99", rate: 6 },
   },
 };
 
@@ -40,7 +42,7 @@ const ChannelCostTable = () => {
               </button>
             </PopoverTrigger>
             <PopoverContent className="w-72 text-[11px] leading-relaxed text-foreground" side="left" align="start">
-              表格中的数值表示在指定回溯周期内（如近7日、近30日）各类成本的统计值（单位：万元）；百分比表示当前周期相较于上一周期的环比变化率（正数表示增长，负数表示下降）。
+              表格中的数值表示在指定回溯周期内各类通道成本的统计值（单位：万元），通道成本率约为万分之四到万分之五；百分比表示当前周期相较于上一周期的环比变化率。
             </PopoverContent>
           </Popover>
         </div>
