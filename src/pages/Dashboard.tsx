@@ -94,7 +94,7 @@ const Dashboard = () => {
 
             {activeModule === "transaction" && (
               <>
-                <CoreDataSummary module="transaction" period={activePeriod} onPeriodChange={setActivePeriod} />
+                <CoreDataSummary module="transaction" period={activePeriod} onPeriodChange={setActivePeriod} role={roleType} />
                 <TransactionInsightTable key={`ti-${filterKey}`} />
                 {roleType === "branch" && <ChannelCostTable key={`cc-${filterKey}`} />}
                 <TransactionDistributionChart
