@@ -111,9 +111,9 @@ const organizationSummaryByPeriod: Record<PeriodType, SummaryItem[]> = {
   ],
 };
 
-const summaryByPeriodMap: Record<ModuleType, Record<PeriodType, SummaryItem[]>> = {
+const summaryByPeriodMap: Record<ModuleType, Record<PeriodType, SummaryItem[]> | null> = {
   merchant: merchantSummaryByPeriod,
-  transaction: transactionSummaryByPeriod,
+  transaction: null, // generated dynamically
   organization: organizationSummaryByPeriod,
 };
 
@@ -126,7 +126,9 @@ interface Props {
 }
 
 const CoreDataSummary = ({ module, period, onPeriodChange }: Props) => {
-  const items = summaryByPeriodMap[module][period];
+  const items = module === "transaction"
+    ? generateTransactionSummary(period)
+    : summaryByPeriodMap[module]![period];
 
   return (
     <Card className="border-border">
