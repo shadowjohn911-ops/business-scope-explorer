@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { transactionInsightData } from "@/components/charts/TransactionInsightTable";
 import { channelCostData, channelCostRates } from "@/components/charts/ChannelCostTable";
-import { industryBase, cardTypeBase, productBase } from "@/components/charts/TransactionDistributionChart";
+import { industryBase, cardTypeBase, productBase, applyPeriod } from "@/components/charts/TransactionDistributionChart";
 
 type ModuleType = "merchant" | "transaction" | "organization";
 type PeriodType = "昨日" | "近7日" | "近30日" | "近90日";
