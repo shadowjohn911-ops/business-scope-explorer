@@ -115,7 +115,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const intakeDownAvgRate = Math.round((intakeDown50.rate + intakeDown75.rate + intakeDown100.rate) / 3);
   result.push({
     title: `${entityLabel}进件波动`,
-    content: `${period}进件增长超200%的${entityLabel}${intakeUp200.value}家，环比${rateDir(intakeUp200.rate)}${Math.abs(intakeUp200.rate)}%；进件下降超50%的${entityLabel}${intakeDownTotal}家，环比${rateDir(intakeDownAvgRate)}${Math.abs(intakeDownAvgRate)}%，${entityLabel}进件活跃度分化加剧，头部增长与尾部下滑并存。`,
+    content: `进件增长超200%的${entityLabel}${intakeUp200.value}家，环比${rateDir(intakeUp200.rate)}${Math.abs(intakeUp200.rate)}%；进件下降超50%的${entityLabel}${intakeDownTotal}家，环比${rateDir(intakeDownAvgRate)}${Math.abs(intakeDownAvgRate)}%。`,
   });
 
   // 2. 服务商/盟友 交易波动
