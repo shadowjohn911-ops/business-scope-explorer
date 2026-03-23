@@ -169,7 +169,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const pIntakeDownAvgRate = Math.round((pIntakeDown50.rate + pIntakeDown75.rate + pIntakeDown100.rate) / 3);
   result.push({
     title: "合作方进件波动",
-    content: `${period}进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降超50%的合作方${pIntakeDownTotal}个，环比${rateDir(pIntakeDownAvgRate)}${Math.abs(pIntakeDownAvgRate)}%，合作方进件活跃度分化加剧，头部增长与尾部下滑并存。`,
+    content: `进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降超50%的合作方${pIntakeDownTotal}个，环比${rateDir(pIntakeDownAvgRate)}${Math.abs(pIntakeDownAvgRate)}%。`,
   });
 
   // 6. 合作方交易波动
