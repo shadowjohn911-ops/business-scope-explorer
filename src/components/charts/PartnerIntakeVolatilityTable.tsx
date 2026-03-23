@@ -101,8 +101,8 @@ const PartnerIntakeVolatilityTable = ({ disableDetails = false, period, onPeriod
         <CardContent className="px-3 py-2.5 pt-1">
           <div className="space-y-0">
             {bands.map((band) => {
-              const { value: count, rate } = mockData[band][period];
-              const maxCount = Math.max(...bands.map((b) => mockData[b][period].value));
+               const { value: count, rate } = partnerIntakeVolatilityData[band][period];
+               const maxCount = Math.max(...bands.map((b) => partnerIntakeVolatilityData[b][period].value));
               const barWidth = maxCount > 0 ? (count / maxCount) * 100 : 0;
               const clickable = !disableDetails && count < 100;
               const isPositive = rate > 0;
