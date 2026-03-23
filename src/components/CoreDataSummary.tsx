@@ -197,7 +197,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const highPartTxPct = ((highPartTxCount / partTxTotal) * 100).toFixed(0);
   result.push({
     title: "交易合作方结构",
-    content: `30天内，交易商户数量超400户的合作方${highPartMerchCount}个，占整体${highPartMerchPct}%；交易金额超400万元的合作方${highPartTxCount}个，占整体${highPartTxPct}%，合作方结构呈现头部集中，中小合作方数量占比高但贡献有限。`,
+    content: `交易商户数量超400户的合作方${highPartMerchCount}个，占整体${highPartMerchPct}%；交易金额超400万元的合作方${highPartTxCount}个，占整体${highPartTxPct}%。`,
   });
 
   return result;
