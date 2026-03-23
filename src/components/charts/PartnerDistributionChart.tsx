@@ -46,7 +46,7 @@ const PartnerDistributionChart = () => {
   const [dimension, setDimension] = useState<Dimension>("merchantScale");
 
   const { data, total } = useMemo(() => {
-    const raw = dimension === "merchantScale" ? merchantScaleData : transactionScaleData;
+    const raw = dimension === "merchantScale" ? partnerMerchantScaleData : partnerTransactionScaleData;
     const t = raw.reduce((s, d) => s + d.value, 0);
     return { data: raw, total: t };
   }, [dimension]);

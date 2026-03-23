@@ -102,7 +102,7 @@ const PartnerBehaviorTable = ({ disableDetails = false }: Props) => {
                   <tr key={b} className="border-b border-border last:border-0">
                     <td className="py-2 pr-2 font-medium text-foreground">{b}</td>
                     {periods.map((p) => {
-                      const { value, rate } = mockData[b][p];
+                      const { value, rate } = partnerBehaviorData[b][p];
                       const isPositive = rate > 0;
                       const clickable = !disableDetails && value < 100;
                       return (

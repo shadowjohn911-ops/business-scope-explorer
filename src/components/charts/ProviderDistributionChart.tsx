@@ -53,7 +53,7 @@ const ProviderDistributionChart = ({ entityLabel = "服务商" }: Props) => {
   const [dimension, setDimension] = useState<Dimension>("merchantScale");
 
   const { data, total } = useMemo(() => {
-    const raw = dimension === "merchantScale" ? merchantScaleData : transactionScaleData;
+    const raw = dimension === "merchantScale" ? providerMerchantScaleData : providerTransactionScaleData;
     const t = raw.reduce((s, d) => s + d.value, 0);
     return { data: raw, total: t };
   }, [dimension]);
