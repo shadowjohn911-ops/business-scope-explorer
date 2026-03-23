@@ -115,7 +115,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const intakeDownAvgRate = Math.round((intakeDown50.rate + intakeDown75.rate + intakeDown100.rate) / 3);
   result.push({
     title: `${entityLabel}进件波动`,
-    content: `${period}进件增长超200%的${entityLabel}${intakeUp200.value}家，环比${rateDir(intakeUp200.rate)}${Math.abs(intakeUp200.rate)}%；进件下降超50%的${entityLabel}${intakeDownTotal}家，环比${rateDir(intakeDownAvgRate)}${Math.abs(intakeDownAvgRate)}%，${entityLabel}进件活跃度分化加剧，头部增长与尾部下滑并存。`,
+    content: `进件增长超200%的${entityLabel}${intakeUp200.value}家，环比${rateDir(intakeUp200.rate)}${Math.abs(intakeUp200.rate)}%；进件下降超50%的${entityLabel}${intakeDownTotal}家，环比${rateDir(intakeDownAvgRate)}${Math.abs(intakeDownAvgRate)}%。`,
   });
 
   // 2. 服务商/盟友 交易波动
@@ -127,7 +127,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const txDownAvgRate = Math.round((txDown50.rate + txDown75.rate + txDown100.rate) / 3);
   result.push({
     title: `${entityLabel}交易波动`,
-    content: `${period}交易额增长超300%的${entityLabel}${txUp200.value}家，环比${rateDir(txUp200.rate)}${Math.abs(txUp200.rate)}%；交易额下降超50%的${entityLabel}${txDownTotal}家，环比${rateDir(txDownAvgRate)}${Math.abs(txDownAvgRate)}%，${entityLabel}交易表现波动扩大，尾部风险上升。`,
+    content: `交易额增长超300%的${entityLabel}${txUp200.value}家，环比${rateDir(txUp200.rate)}${Math.abs(txUp200.rate)}%；交易额下降超50%的${entityLabel}${txDownTotal}家，环比${rateDir(txDownAvgRate)}${Math.abs(txDownAvgRate)}%。`,
   });
 
   // 3. 交易服务商/盟友 结构
@@ -146,7 +146,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const highTxPct = ((highTxCount / provTxTotal) * 100).toFixed(0);
   result.push({
     title: `交易${entityLabel}结构`,
-    content: `30天内，交易商户数量超400户的${entityLabel}${highMerchCount}家，占整体${highMerchPct}%；交易金额超400万元的${entityLabel}${highTxCount}家，占整体${highTxPct}%，${entityLabel}结构呈现头部集中，中小${entityLabel}数量占比高但贡献有限。`,
+    content: `交易商户数量超400户的${entityLabel}${highMerchCount}家，占整体${highMerchPct}%；交易金额超400万元的${entityLabel}${highTxCount}家，占整体${highTxPct}%。`,
   });
 
   // 4. 合作方入网与进件
@@ -169,7 +169,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const pIntakeDownAvgRate = Math.round((pIntakeDown50.rate + pIntakeDown75.rate + pIntakeDown100.rate) / 3);
   result.push({
     title: "合作方进件波动",
-    content: `${period}进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降超50%的合作方${pIntakeDownTotal}个，环比${rateDir(pIntakeDownAvgRate)}${Math.abs(pIntakeDownAvgRate)}%，合作方进件活跃度分化加剧，头部增长与尾部下滑并存。`,
+    content: `进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降超50%的合作方${pIntakeDownTotal}个，环比${rateDir(pIntakeDownAvgRate)}${Math.abs(pIntakeDownAvgRate)}%。`,
   });
 
   // 6. 合作方交易波动
@@ -181,7 +181,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const pTxDownAvgRate = Math.round((pTxDown50.rate + pTxDown75.rate + pTxDown100.rate) / 3);
   result.push({
     title: "合作方交易波动",
-    content: `${period}交易额增长超300%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降超50%的合作方${pTxDownTotal}个，环比${rateDir(pTxDownAvgRate)}${Math.abs(pTxDownAvgRate)}%，合作方交易表现波动扩大，尾部风险上升。`,
+    content: `交易额增长超300%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降超50%的合作方${pTxDownTotal}个，环比${rateDir(pTxDownAvgRate)}${Math.abs(pTxDownAvgRate)}%。`,
   });
 
   // 7. 交易合作方结构
@@ -197,7 +197,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const highPartTxPct = ((highPartTxCount / partTxTotal) * 100).toFixed(0);
   result.push({
     title: "交易合作方结构",
-    content: `30天内，交易商户数量超400户的合作方${highPartMerchCount}个，占整体${highPartMerchPct}%；交易金额超400万元的合作方${highPartTxCount}个，占整体${highPartTxPct}%，合作方结构呈现头部集中，中小合作方数量占比高但贡献有限。`,
+    content: `交易商户数量超400户的合作方${highPartMerchCount}个，占整体${highPartMerchPct}%；交易金额超400万元的合作方${highPartTxCount}个，占整体${highPartTxPct}%。`,
   });
 
   return result;
