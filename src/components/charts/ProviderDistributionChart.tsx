@@ -32,7 +32,7 @@ export const providerMerchantScaleData = [
   { name: "5000户以上", value: 8 },
 ];
 
-const transactionScaleData = [
+export const providerTransactionScaleData = [
   { name: "5k以下", value: 95 },
   { name: "5k-2w", value: 220 },
   { name: "2w-10w", value: 380 },

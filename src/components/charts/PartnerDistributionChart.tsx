@@ -28,7 +28,7 @@ export const partnerMerchantScaleData = [
   { name: "500户以上", value: 30 },
 ];
 
-const transactionScaleData = [
+export const partnerTransactionScaleData = [
   { name: "500以下", value: 65 },
   { name: "500-2k", value: 140 },
   { name: "2k-5k", value: 230 },

@@ -9,7 +9,7 @@ const behaviors = ["入网", "首次进件", "活跃"] as const;
 const PAGE_SIZE = 20;
 
 // Hardcoded data synchronized with CoreDataSummary organization module
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
+export const partnerBehaviorData: Record<string, Record<string, { value: number; rate: number }>> = {
   "入网": {
     "昨日": { value: 4, rate: 15 },
     "近7日": { value: 25, rate: 30 },

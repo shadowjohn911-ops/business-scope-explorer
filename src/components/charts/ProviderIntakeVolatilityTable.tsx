@@ -13,7 +13,7 @@ const bandRanges: Record<string, [number, number]> = {
 };
 const PAGE_SIZE = 20;
 
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
+export const providerIntakeVolatilityData: Record<string, Record<string, { value: number; rate: number }>> = {
   "⬆200%以上":  { "昨日": { value: 3, rate: 25 },  "近7日": { value: 15, rate: 30 },  "近30日": { value: 28, rate: 20 },  "近90日": { value: 42, rate: 15 } },
   "⬆100%~200%": { "昨日": { value: 2, rate: 15 },  "近7日": { value: 8, rate: -10 },  "近30日": { value: 15, rate: 12 },  "近90日": { value: 22, rate: 10 } },
   "⬆50%~100%":  { "昨日": { value: 4, rate: -10 }, "近7日": { value: 12, rate: 15 },  "近30日": { value: 18, rate: -8 },  "近90日": { value: 25, rate: -5 } },
