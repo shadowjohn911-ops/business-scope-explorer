@@ -167,16 +167,12 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
     content: `进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降100%的合作方${pIntakeDown100.value}个，环比${rateDir(pIntakeDown100.rate)}${Math.abs(pIntakeDown100.rate)}%。`,
   });
 
-  // 6. 合作方交易波动
+  // 6. 合作方交易波动 - 下降100%
   const pTxUp200 = partnerTransactionVolatilityData["⬆200%以上"][period];
-  const pTxDown50 = partnerTransactionVolatilityData["⬇50%~75%"][period];
-  const pTxDown75 = partnerTransactionVolatilityData["⬇75%~100%"][period];
   const pTxDown100 = partnerTransactionVolatilityData["⬇100%"][period];
-  const pTxDownTotal = pTxDown50.value + pTxDown75.value + pTxDown100.value;
-  const pTxDownAvgRate = Math.round((pTxDown50.rate + pTxDown75.rate + pTxDown100.rate) / 3);
   result.push({
     title: "合作方交易波动",
-    content: `交易额增长超300%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降超50%的合作方${pTxDownTotal}个，环比${rateDir(pTxDownAvgRate)}${Math.abs(pTxDownAvgRate)}%。`,
+    content: `交易额增长超200%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降100%的合作方${pTxDown100.value}个，环比${rateDir(pTxDown100.rate)}${Math.abs(pTxDown100.rate)}%。`,
   });
 
   // 7. 交易合作方结构
