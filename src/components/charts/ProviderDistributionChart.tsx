@@ -19,7 +19,7 @@ const COLORS = [
   "hsl(120, 50%, 40%)",
 ];
 
-const merchantScaleData = [
+export const providerMerchantScaleData = [
   { name: "1户", value: 120 },
   { name: "2-5户", value: 350 },
   { name: "6-20户", value: 400 },
