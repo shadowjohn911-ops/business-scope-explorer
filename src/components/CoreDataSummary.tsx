@@ -127,7 +127,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const txDownAvgRate = Math.round((txDown50.rate + txDown75.rate + txDown100.rate) / 3);
   result.push({
     title: `${entityLabel}交易波动`,
-    content: `${period}交易额增长超300%的${entityLabel}${txUp200.value}家，环比${rateDir(txUp200.rate)}${Math.abs(txUp200.rate)}%；交易额下降超50%的${entityLabel}${txDownTotal}家，环比${rateDir(txDownAvgRate)}${Math.abs(txDownAvgRate)}%，${entityLabel}交易表现波动扩大，尾部风险上升。`,
+    content: `交易额增长超300%的${entityLabel}${txUp200.value}家，环比${rateDir(txUp200.rate)}${Math.abs(txUp200.rate)}%；交易额下降超50%的${entityLabel}${txDownTotal}家，环比${rateDir(txDownAvgRate)}${Math.abs(txDownAvgRate)}%。`,
   });
 
   // 3. 交易服务商/盟友 结构
