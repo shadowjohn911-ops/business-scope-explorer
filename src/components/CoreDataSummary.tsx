@@ -221,6 +221,8 @@ interface Props {
 const CoreDataSummary = ({ module, period, onPeriodChange, role = "branch" }: Props) => {
   const items = module === "transaction"
     ? generateTransactionSummary(period, role)
+    : module === "organization"
+    ? generateOrganizationSummary(period, role)
     : summaryByPeriodMap[module]![period];
 
   return (
