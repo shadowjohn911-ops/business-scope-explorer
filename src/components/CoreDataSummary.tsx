@@ -175,20 +175,22 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
     content: `交易额增长超200%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降100%的合作方${pTxDown100.value}个，环比${rateDir(pTxDown100.rate)}${Math.abs(pTxDown100.rate)}%。`,
   });
 
-  // 7. 交易合作方结构
+  // 7. 交易合作方结构 - 取前50%的类型
   const partMerchTotal = partnerMerchantScaleData.reduce((s, d) => s + d.value, 0);
   const partTxTotal = partnerTransactionScaleData.reduce((s, d) => s + d.value, 0);
-  const highPartMerchCount = partnerMerchantScaleData.filter(d => {
-    return d.name.includes("101") || d.name.includes("500户以上");
-  }).reduce((s, d) => s + d.value, 0);
+  const partMerchHalfIdx = Math.ceil(partnerMerchantScaleData.length / 2);
+  const partTxHalfIdx = Math.ceil(partnerTransactionScaleData.length / 2);
+  const topPartMerchData = partnerMerchantScaleData.slice(partMerchHalfIdx);
+  const highPartMerchCount = topPartMerchData.reduce((s, d) => s + d.value, 0);
   const highPartMerchPct = ((highPartMerchCount / partMerchTotal) * 100).toFixed(0);
-  const highPartTxCount = partnerTransactionScaleData.filter(d => {
-    return d.name.includes("10w-50w") || d.name.includes("50w以上");
-  }).reduce((s, d) => s + d.value, 0);
+  const topPartMerchLabel = topPartMerchData[0]?.name?.match(/(\d+)/)?.[1] || "";
+  const topPartTxData = partnerTransactionScaleData.slice(partTxHalfIdx);
+  const highPartTxCount = topPartTxData.reduce((s, d) => s + d.value, 0);
   const highPartTxPct = ((highPartTxCount / partTxTotal) * 100).toFixed(0);
+  const topPartTxLabel = topPartTxData[0]?.name || "";
   result.push({
     title: "交易合作方结构",
-    content: `交易商户数量超400户的合作方${highPartMerchCount}个，占整体${highPartMerchPct}%；交易金额超400万元的合作方${highPartTxCount}个，占整体${highPartTxPct}%。`,
+    content: `交易商户数量${topPartMerchLabel}户以上的合作方${highPartMerchCount}个，占整体${highPartMerchPct}%；交易金额${topPartTxLabel}以上的合作方${highPartTxCount}个，占整体${highPartTxPct}%。`,
   });
 
   return result;
