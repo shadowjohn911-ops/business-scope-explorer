@@ -130,23 +130,22 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
     content: `交易额增长超200%的${entityLabel}${txUp200.value}家，环比${rateDir(txUp200.rate)}${Math.abs(txUp200.rate)}%；交易额下降超50%的${entityLabel}${txDownTotal}家，环比${rateDir(txDownAvgRate)}${Math.abs(txDownAvgRate)}%。`,
   });
 
-  // 3. 交易服务商/盟友 结构
+  // 3. 交易服务商/盟友 结构 - 取前50%的类型
   const provMerchTotal = providerMerchantScaleData.reduce((s, d) => s + d.value, 0);
   const provTxTotal = providerTransactionScaleData.reduce((s, d) => s + d.value, 0);
-  // 头部：商户数量超400户 (取最后几档合计)
-  const highMerchCount = providerMerchantScaleData.filter(d => {
-    const match = d.name.match(/(\d+)/);
-    return match && parseInt(match[1]) >= 201;
-  }).reduce((s, d) => s + d.value, 0);
+  const provMerchHalfIdx = Math.ceil(providerMerchantScaleData.length / 2);
+  const provTxHalfIdx = Math.ceil(providerTransactionScaleData.length / 2);
+  const topMerchData = providerMerchantScaleData.slice(provMerchHalfIdx);
+  const highMerchCount = topMerchData.reduce((s, d) => s + d.value, 0);
   const highMerchPct = ((highMerchCount / provMerchTotal) * 100).toFixed(0);
-  // 头部：交易金额超400万 (取高档合计)
-  const highTxCount = providerTransactionScaleData.filter(d => {
-    return d.name.includes("200w") || d.name.includes("1000w") || d.name.includes("5000w");
-  }).reduce((s, d) => s + d.value, 0);
+  const topMerchLabel = topMerchData[0]?.name?.match(/(\d+)/)?.[1] || "";
+  const topTxData = providerTransactionScaleData.slice(provTxHalfIdx);
+  const highTxCount = topTxData.reduce((s, d) => s + d.value, 0);
   const highTxPct = ((highTxCount / provTxTotal) * 100).toFixed(0);
+  const topTxLabel = topTxData[0]?.name || "";
   result.push({
     title: `交易${entityLabel}结构`,
-    content: `交易商户数量超400户的${entityLabel}${highMerchCount}家，占整体${highMerchPct}%；交易金额超400万元的${entityLabel}${highTxCount}家，占整体${highTxPct}%。`,
+    content: `交易商户数量${topMerchLabel}户以上的${entityLabel}${highMerchCount}家，占整体${highMerchPct}%；交易金额${topTxLabel}以上的${entityLabel}${highTxCount}家，占整体${highTxPct}%。`,
   });
 
   // 4. 合作方入网与进件
