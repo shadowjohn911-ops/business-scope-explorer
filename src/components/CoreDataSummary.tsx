@@ -159,16 +159,12 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
     content: `入网合作方${entryData.value}个，环比${rateDir(entryData.rate)}${Math.abs(entryData.rate)}%；首次进件${firstIntake.value}个，环比${rateDir(firstIntake.rate)}${Math.abs(firstIntake.rate)}%；新合作方进件转化率${conversionRate}%，与平均数据相比${convLabel}。有进件行为的合作方${activeData.value}个，环比${rateDir(activeData.rate)}${Math.abs(activeData.rate)}%。`,
   });
 
-  // 5. 合作方进件波动
+  // 5. 合作方进件波动 - 下降100%
   const pIntakeUp200 = partnerIntakeVolatilityData["⬆200%以上"][period];
-  const pIntakeDown50 = partnerIntakeVolatilityData["⬇50%~75%"][period];
-  const pIntakeDown75 = partnerIntakeVolatilityData["⬇75%~100%"][period];
   const pIntakeDown100 = partnerIntakeVolatilityData["⬇100%"][period];
-  const pIntakeDownTotal = pIntakeDown50.value + pIntakeDown75.value + pIntakeDown100.value;
-  const pIntakeDownAvgRate = Math.round((pIntakeDown50.rate + pIntakeDown75.rate + pIntakeDown100.rate) / 3);
   result.push({
     title: "合作方进件波动",
-    content: `进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降超50%的合作方${pIntakeDownTotal}个，环比${rateDir(pIntakeDownAvgRate)}${Math.abs(pIntakeDownAvgRate)}%。`,
+    content: `进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降100%的合作方${pIntakeDown100.value}个，环比${rateDir(pIntakeDown100.rate)}${Math.abs(pIntakeDown100.rate)}%。`,
   });
 
   // 6. 合作方交易波动
