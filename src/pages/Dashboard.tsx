@@ -126,7 +126,7 @@ const Dashboard = () => {
 
             {activeModule === "organization" && roleType === "provider" && (
               <>
-                <CoreDataSummary module="organization" period={activePeriod} onPeriodChange={setActivePeriod} role={roleType} />
+                <CoreDataSummary module="organization" period={activePeriod} onPeriodChange={setActivePeriod} role={roleType} ownerLevel1={ownerLevel1} />
                 {ownerLevel1 !== "自有" && (
                   <>
                     <ProviderIntakeVolatilityTable key={`piv-${filterKey}`} entityLabel="盟友" period={activePeriod} onPeriodChange={setActivePeriod} />
