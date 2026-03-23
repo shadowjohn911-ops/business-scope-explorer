@@ -181,7 +181,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const pTxDownAvgRate = Math.round((pTxDown50.rate + pTxDown75.rate + pTxDown100.rate) / 3);
   result.push({
     title: "合作方交易波动",
-    content: `${period}交易额增长超300%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降超50%的合作方${pTxDownTotal}个，环比${rateDir(pTxDownAvgRate)}${Math.abs(pTxDownAvgRate)}%，合作方交易表现波动扩大，尾部风险上升。`,
+    content: `交易额增长超300%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降超50%的合作方${pTxDownTotal}个，环比${rateDir(pTxDownAvgRate)}${Math.abs(pTxDownAvgRate)}%。`,
   });
 
   // 7. 交易合作方结构
