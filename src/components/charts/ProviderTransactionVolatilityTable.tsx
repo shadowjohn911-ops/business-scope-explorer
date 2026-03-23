@@ -13,7 +13,7 @@ const bandRanges: Record<string, [number, number]> = {
 };
 const PAGE_SIZE = 20;
 
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
+export const providerTransactionVolatilityData: Record<string, Record<string, { value: number; rate: number }>> = {
   "⬆200%以上":  { "昨日": { value: 2, rate: 20 },  "近7日": { value: 12, rate: 25 },  "近30日": { value: 22, rate: 18 },  "近90日": { value: 35, rate: 12 } },
   "⬆100%~200%": { "昨日": { value: 3, rate: 15 },  "近7日": { value: 6, rate: -10 },  "近30日": { value: 12, rate: 12 },  "近90日": { value: 18, rate: 10 } },
   "⬆50%~100%":  { "昨日": { value: 5, rate: -10 }, "近7日": { value: 10, rate: 15 },  "近30日": { value: 15, rate: -8 },  "近90日": { value: 20, rate: -5 } },
@@ -94,8 +94,8 @@ const ProviderTransactionVolatilityTable = ({ entityLabel = "服务商", period,
         <CardContent className="px-3 py-2.5 pt-1">
           <div className="space-y-0">
             {bands.map((band) => {
-              const { value: count, rate } = mockData[band][period];
-              const maxCount = Math.max(...bands.map((b) => mockData[b][period].value));
+               const { value: count, rate } = providerTransactionVolatilityData[band][period];
+               const maxCount = Math.max(...bands.map((b) => providerTransactionVolatilityData[b][period].value));
               const barWidth = maxCount > 0 ? (count / maxCount) * 100 : 0;
               const clickable = count < 100;
               const isPositive = rate > 0;

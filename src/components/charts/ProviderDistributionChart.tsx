@@ -19,7 +19,7 @@ const COLORS = [
   "hsl(120, 50%, 40%)",
 ];
 
-const merchantScaleData = [
+export const providerMerchantScaleData = [
   { name: "1户", value: 120 },
   { name: "2-5户", value: 350 },
   { name: "6-20户", value: 400 },
@@ -32,7 +32,7 @@ const merchantScaleData = [
   { name: "5000户以上", value: 8 },
 ];
 
-const transactionScaleData = [
+export const providerTransactionScaleData = [
   { name: "5k以下", value: 95 },
   { name: "5k-2w", value: 220 },
   { name: "2w-10w", value: 380 },
@@ -53,7 +53,7 @@ const ProviderDistributionChart = ({ entityLabel = "服务商" }: Props) => {
   const [dimension, setDimension] = useState<Dimension>("merchantScale");
 
   const { data, total } = useMemo(() => {
-    const raw = dimension === "merchantScale" ? merchantScaleData : transactionScaleData;
+    const raw = dimension === "merchantScale" ? providerMerchantScaleData : providerTransactionScaleData;
     const t = raw.reduce((s, d) => s + d.value, 0);
     return { data: raw, total: t };
   }, [dimension]);

@@ -9,7 +9,7 @@ const behaviors = ["入网", "首次进件", "活跃"] as const;
 const PAGE_SIZE = 20;
 
 // Hardcoded data synchronized with CoreDataSummary organization module
-const mockData: Record<string, Record<string, { value: number; rate: number }>> = {
+export const partnerBehaviorData: Record<string, Record<string, { value: number; rate: number }>> = {
   "入网": {
     "昨日": { value: 4, rate: 15 },
     "近7日": { value: 25, rate: 30 },
@@ -102,7 +102,7 @@ const PartnerBehaviorTable = ({ disableDetails = false }: Props) => {
                   <tr key={b} className="border-b border-border last:border-0">
                     <td className="py-2 pr-2 font-medium text-foreground">{b}</td>
                     {periods.map((p) => {
-                      const { value, rate } = mockData[b][p];
+                      const { value, rate } = partnerBehaviorData[b][p];
                       const isPositive = rate > 0;
                       const clickable = !disableDetails && value < 100;
                       return (

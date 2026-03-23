@@ -18,7 +18,7 @@ const COLORS = [
   "hsl(280, 50%, 50%)",
 ];
 
-const merchantScaleData = [
+export const partnerMerchantScaleData = [
   { name: "1户", value: 80 },
   { name: "2-5户", value: 220 },
   { name: "6-20户", value: 310 },
@@ -28,7 +28,7 @@ const merchantScaleData = [
   { name: "500户以上", value: 30 },
 ];
 
-const transactionScaleData = [
+export const partnerTransactionScaleData = [
   { name: "500以下", value: 65 },
   { name: "500-2k", value: 140 },
   { name: "2k-5k", value: 230 },
@@ -46,7 +46,7 @@ const PartnerDistributionChart = () => {
   const [dimension, setDimension] = useState<Dimension>("merchantScale");
 
   const { data, total } = useMemo(() => {
-    const raw = dimension === "merchantScale" ? merchantScaleData : transactionScaleData;
+    const raw = dimension === "merchantScale" ? partnerMerchantScaleData : partnerTransactionScaleData;
     const t = raw.reduce((s, d) => s + d.value, 0);
     return { data: raw, total: t };
   }, [dimension]);
