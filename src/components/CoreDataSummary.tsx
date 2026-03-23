@@ -146,7 +146,7 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const highTxPct = ((highTxCount / provTxTotal) * 100).toFixed(0);
   result.push({
     title: `交易${entityLabel}结构`,
-    content: `30天内，交易商户数量超400户的${entityLabel}${highMerchCount}家，占整体${highMerchPct}%；交易金额超400万元的${entityLabel}${highTxCount}家，占整体${highTxPct}%，${entityLabel}结构呈现头部集中，中小${entityLabel}数量占比高但贡献有限。`,
+    content: `交易商户数量超400户的${entityLabel}${highMerchCount}家，占整体${highMerchPct}%；交易金额超400万元的${entityLabel}${highTxCount}家，占整体${highTxPct}%。`,
   });
 
   // 4. 合作方入网与进件
