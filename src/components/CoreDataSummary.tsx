@@ -218,13 +218,14 @@ interface Props {
   period: PeriodType;
   onPeriodChange: (p: PeriodType) => void;
   role?: RoleType;
+  ownerLevel1?: string;
 }
 
-const CoreDataSummary = ({ module, period, onPeriodChange, role = "branch" }: Props) => {
+const CoreDataSummary = ({ module, period, onPeriodChange, role = "branch", ownerLevel1 = "全部" }: Props) => {
   const items = module === "transaction"
     ? generateTransactionSummary(period, role)
     : module === "organization"
-    ? generateOrganizationSummary(period, role)
+    ? generateOrganizationSummary(period, role, ownerLevel1)
     : summaryByPeriodMap[module]![period];
 
   return (
