@@ -127,26 +127,25 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
   const txDownAvgRate = Math.round((txDown50.rate + txDown75.rate + txDown100.rate) / 3);
   result.push({
     title: `${entityLabel}交易波动`,
-    content: `交易额增长超300%的${entityLabel}${txUp200.value}家，环比${rateDir(txUp200.rate)}${Math.abs(txUp200.rate)}%；交易额下降超50%的${entityLabel}${txDownTotal}家，环比${rateDir(txDownAvgRate)}${Math.abs(txDownAvgRate)}%。`,
+    content: `交易额增长超200%的${entityLabel}${txUp200.value}家，环比${rateDir(txUp200.rate)}${Math.abs(txUp200.rate)}%；交易额下降超50%的${entityLabel}${txDownTotal}家，环比${rateDir(txDownAvgRate)}${Math.abs(txDownAvgRate)}%。`,
   });
 
-  // 3. 交易服务商/盟友 结构
+  // 3. 交易服务商/盟友 结构 - 取前50%的类型
   const provMerchTotal = providerMerchantScaleData.reduce((s, d) => s + d.value, 0);
   const provTxTotal = providerTransactionScaleData.reduce((s, d) => s + d.value, 0);
-  // 头部：商户数量超400户 (取最后几档合计)
-  const highMerchCount = providerMerchantScaleData.filter(d => {
-    const match = d.name.match(/(\d+)/);
-    return match && parseInt(match[1]) >= 201;
-  }).reduce((s, d) => s + d.value, 0);
+  const provMerchHalfIdx = Math.ceil(providerMerchantScaleData.length / 2);
+  const provTxHalfIdx = Math.ceil(providerTransactionScaleData.length / 2);
+  const topMerchData = providerMerchantScaleData.slice(provMerchHalfIdx);
+  const highMerchCount = topMerchData.reduce((s, d) => s + d.value, 0);
   const highMerchPct = ((highMerchCount / provMerchTotal) * 100).toFixed(0);
-  // 头部：交易金额超400万 (取高档合计)
-  const highTxCount = providerTransactionScaleData.filter(d => {
-    return d.name.includes("200w") || d.name.includes("1000w") || d.name.includes("5000w");
-  }).reduce((s, d) => s + d.value, 0);
+  const topMerchLabel = topMerchData[0]?.name?.match(/(\d+)/)?.[1] || "";
+  const topTxData = providerTransactionScaleData.slice(provTxHalfIdx);
+  const highTxCount = topTxData.reduce((s, d) => s + d.value, 0);
   const highTxPct = ((highTxCount / provTxTotal) * 100).toFixed(0);
+  const topTxLabel = topTxData[0]?.name || "";
   result.push({
     title: `交易${entityLabel}结构`,
-    content: `交易商户数量超400户的${entityLabel}${highMerchCount}家，占整体${highMerchPct}%；交易金额超400万元的${entityLabel}${highTxCount}家，占整体${highTxPct}%。`,
+    content: `交易商户数量${topMerchLabel}户以上的${entityLabel}${highMerchCount}家，占整体${highMerchPct}%；交易金额${topTxLabel}以上的${entityLabel}${highTxCount}家，占整体${highTxPct}%。`,
   });
 
   // 4. 合作方入网与进件
@@ -160,44 +159,38 @@ function generateOrganizationSummary(period: PeriodType, role: RoleType): Summar
     content: `入网合作方${entryData.value}个，环比${rateDir(entryData.rate)}${Math.abs(entryData.rate)}%；首次进件${firstIntake.value}个，环比${rateDir(firstIntake.rate)}${Math.abs(firstIntake.rate)}%；新合作方进件转化率${conversionRate}%，与平均数据相比${convLabel}。有进件行为的合作方${activeData.value}个，环比${rateDir(activeData.rate)}${Math.abs(activeData.rate)}%。`,
   });
 
-  // 5. 合作方进件波动
+  // 5. 合作方进件波动 - 下降100%
   const pIntakeUp200 = partnerIntakeVolatilityData["⬆200%以上"][period];
-  const pIntakeDown50 = partnerIntakeVolatilityData["⬇50%~75%"][period];
-  const pIntakeDown75 = partnerIntakeVolatilityData["⬇75%~100%"][period];
   const pIntakeDown100 = partnerIntakeVolatilityData["⬇100%"][period];
-  const pIntakeDownTotal = pIntakeDown50.value + pIntakeDown75.value + pIntakeDown100.value;
-  const pIntakeDownAvgRate = Math.round((pIntakeDown50.rate + pIntakeDown75.rate + pIntakeDown100.rate) / 3);
   result.push({
     title: "合作方进件波动",
-    content: `进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降超50%的合作方${pIntakeDownTotal}个，环比${rateDir(pIntakeDownAvgRate)}${Math.abs(pIntakeDownAvgRate)}%。`,
+    content: `进件增长超200%的合作方${pIntakeUp200.value}个，环比${rateDir(pIntakeUp200.rate)}${Math.abs(pIntakeUp200.rate)}%；进件下降100%的合作方${pIntakeDown100.value}个，环比${rateDir(pIntakeDown100.rate)}${Math.abs(pIntakeDown100.rate)}%。`,
   });
 
-  // 6. 合作方交易波动
+  // 6. 合作方交易波动 - 下降100%
   const pTxUp200 = partnerTransactionVolatilityData["⬆200%以上"][period];
-  const pTxDown50 = partnerTransactionVolatilityData["⬇50%~75%"][period];
-  const pTxDown75 = partnerTransactionVolatilityData["⬇75%~100%"][period];
   const pTxDown100 = partnerTransactionVolatilityData["⬇100%"][period];
-  const pTxDownTotal = pTxDown50.value + pTxDown75.value + pTxDown100.value;
-  const pTxDownAvgRate = Math.round((pTxDown50.rate + pTxDown75.rate + pTxDown100.rate) / 3);
   result.push({
     title: "合作方交易波动",
-    content: `交易额增长超300%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降超50%的合作方${pTxDownTotal}个，环比${rateDir(pTxDownAvgRate)}${Math.abs(pTxDownAvgRate)}%。`,
+    content: `交易额增长超200%的合作方${pTxUp200.value}个，环比${rateDir(pTxUp200.rate)}${Math.abs(pTxUp200.rate)}%；交易额下降100%的合作方${pTxDown100.value}个，环比${rateDir(pTxDown100.rate)}${Math.abs(pTxDown100.rate)}%。`,
   });
 
-  // 7. 交易合作方结构
+  // 7. 交易合作方结构 - 取前50%的类型
   const partMerchTotal = partnerMerchantScaleData.reduce((s, d) => s + d.value, 0);
   const partTxTotal = partnerTransactionScaleData.reduce((s, d) => s + d.value, 0);
-  const highPartMerchCount = partnerMerchantScaleData.filter(d => {
-    return d.name.includes("101") || d.name.includes("500户以上");
-  }).reduce((s, d) => s + d.value, 0);
+  const partMerchHalfIdx = Math.ceil(partnerMerchantScaleData.length / 2);
+  const partTxHalfIdx = Math.ceil(partnerTransactionScaleData.length / 2);
+  const topPartMerchData = partnerMerchantScaleData.slice(partMerchHalfIdx);
+  const highPartMerchCount = topPartMerchData.reduce((s, d) => s + d.value, 0);
   const highPartMerchPct = ((highPartMerchCount / partMerchTotal) * 100).toFixed(0);
-  const highPartTxCount = partnerTransactionScaleData.filter(d => {
-    return d.name.includes("10w-50w") || d.name.includes("50w以上");
-  }).reduce((s, d) => s + d.value, 0);
+  const topPartMerchLabel = topPartMerchData[0]?.name?.match(/(\d+)/)?.[1] || "";
+  const topPartTxData = partnerTransactionScaleData.slice(partTxHalfIdx);
+  const highPartTxCount = topPartTxData.reduce((s, d) => s + d.value, 0);
   const highPartTxPct = ((highPartTxCount / partTxTotal) * 100).toFixed(0);
+  const topPartTxLabel = topPartTxData[0]?.name || "";
   result.push({
     title: "交易合作方结构",
-    content: `交易商户数量超400户的合作方${highPartMerchCount}个，占整体${highPartMerchPct}%；交易金额超400万元的合作方${highPartTxCount}个，占整体${highPartTxPct}%。`,
+    content: `交易商户数量${topPartMerchLabel}户以上的合作方${highPartMerchCount}个，占整体${highPartMerchPct}%；交易金额${topPartTxLabel}以上的合作方${highPartTxCount}个，占整体${highPartTxPct}%。`,
   });
 
   return result;
